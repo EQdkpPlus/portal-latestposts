@@ -5,15 +5,15 @@
  * Link:		    http://creativecommons.org/licenses/by-nc-sa/3.0/
  * -----------------------------------------------------------------------
  * Began:       2008
- * Date:        $Date: 2008-12-02 13:38:01 +0100 (Di, 02 Dez 2008) $
+ * Date:        $Date$
  * -----------------------------------------------------------------------
- * @author      $Author: wallenium $
+ * @author      $Author$
  * @copyright   2006-2008 Corgan - Stefan Knaak | Wallenium & the EQdkp-Plus Developer Team
  * @link        http://eqdkp-plus.com
  * @package     eqdkp-plus
- * @version     $Rev: 3294 $
+ * @version     $Rev$
  * 
- * $Id: module.php 3294 2008-12-02 12:38:01Z wallenium $
+ * $Id$
  */
 
 if ( !defined('EQDKP_INC') ){
