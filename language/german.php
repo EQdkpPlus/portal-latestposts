@@ -39,5 +39,7 @@ $plang = array_merge($plang, array(
   'pk_latestposts_starter'      => 'Starter',
   'pk_latestposts_posts'        => 'Antworten',
   'pk_latestposts_title'        => 'Titel',
+  'pk_latestposts_trimtitle'    => 'Lange Thementitel nach x Buchstaben beschneiden',
+  'pk_latestposts_trimtitle_h'  => 'Gilt nur für die Anzeige Rechts/Links',
 ));
 ?>
