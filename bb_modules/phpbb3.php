@@ -21,11 +21,12 @@ if ( !defined('EQDKP_INC') ){
 }
 
 // Define the tables & configuration options
-$table_topics = $conf_plus['pk_latestposts_dbprefix']. "topics";
-$table_forums = $conf_plus['pk_latestposts_dbprefix']. "forums";
-$table_posts = $conf_plus['pk_latestposts_dbprefix']. "posts";
-$table_users = $conf_plus['pk_latestposts_dbprefix']. "users";
-$topicnumber = ($conf_plus['pk_latestposts_amount']) ? $conf_plus['pk_latestposts_amount'] : 5;
+$table_topics   = $conf_plus['pk_latestposts_dbprefix']. "topics";
+$table_forums   = $conf_plus['pk_latestposts_dbprefix']. "forums";
+$table_posts    = $conf_plus['pk_latestposts_dbprefix']. "posts";
+$table_users    = $conf_plus['pk_latestposts_dbprefix']. "users";
+$topicnumber    = ($conf_plus['pk_latestposts_amount']) ? $conf_plus['pk_latestposts_amount'] : 5;
+$privateforums  = ($conf_plus['pk_latestposts_privateforums']) ? explode(";", $conf_plus['pk_latestposts_privateforums']) : '';
 
 // Build the db query
 $myBBquery  = "SELECT t.topic_id as bb_topic_id, t.topic_title as bb_topic_title, 
@@ -35,11 +36,14 @@ $myBBquery  = "SELECT t.topic_id as bb_topic_id, t.topic_title as bb_topic_title
               FROM ".$table_topics." t, ".$table_forums." f, ".$table_posts." p, ".$table_users." u
               WHERE t.topic_id = p.topic_id AND
               f.forum_id = t.forum_id AND
-              t.topic_status <> 2 AND
-              p.post_id = t.topic_last_post_id AND
+              t.topic_status <> 2 AND ";
+if(is_array($privateforums)){
+  $myBBquery .= "t.forum_id NOT IN(". implode(', ', $privateforums).") AND ";
+}
+$myBBquery .= "p.post_id = t.topic_last_post_id AND
               p.poster_id = u.user_id
               ORDER BY p.post_id DESC LIMIT ".$topicnumber;
-
+            
 // Link
 function bbLinkGeneration($mode, $row){
   global $conf_plus;

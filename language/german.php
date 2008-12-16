@@ -41,5 +41,7 @@ $plang = array_merge($plang, array(
   'pk_latestposts_title'        => 'Titel',
   'pk_latestposts_trimtitle'    => 'Lange Thementitel nach x Buchstaben beschneiden',
   'pk_latestposts_trimtitle_h'  => 'Gilt nur für die Anzeige Rechts/Links',
+  'pk_latestposts_privateforums'=> 'ID der privaten Foren, getrennt durch Semikolon',
+  'pk_latestposts_privforums_h' => 'Private Foren werden nicht in den neusten Einträgen gelistet',
 ));
 ?>

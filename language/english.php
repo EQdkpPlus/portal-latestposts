@@ -41,5 +41,7 @@ $plang = array_merge($plang, array(
   'pk_latestposts_title'        => 'Title',
   'pk_latestposts_trimtitle'    => 'trim long topic titles after x chars',
   'pk_latestposts_trimtitle_h'  => 'Only when in left/right Module block',
+  'pk_latestposts_privateforums'=> 'ID of the private forums, seperated by semicolon',
+  'pk_latestposts_privforums_h' => 'Private Forums will not be listed in the latest posts.',
 ));
 ?>
