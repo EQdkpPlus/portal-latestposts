@@ -43,5 +43,6 @@ $plang = array_merge($plang, array(
   'pk_latestposts_trimtitle_h'  => 'Gilt nur für die Anzeige Rechts/Links',
   'pk_latestposts_privateforums'=> 'ID der privaten Foren, getrennt durch Semikolon',
   'pk_latestposts_privforums_h' => 'Private Foren werden nicht in den neusten Einträgen gelistet',
+  'pk_latestposts_plus2old'     => 'Plus Version zu alt. 0.6.2.0 Stable oder höher benötigt',
 ));
 ?>
