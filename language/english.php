@@ -45,5 +45,7 @@ $plang = array_merge($plang, array(
   'pk_latestposts_privforums_h' => 'Private Forums will not be listed in the latest posts.',
   'pk_latestposts_plus2old'     => 'Plus Version too old. 0.6.2.0 Stable or higher required',
   'pk_latestposts_newwindow'    => 'Open Topic Links in New window?',
+  'pk_latestposts_blackwhite'   => 'Black - or Whitelists',
+  'pk_latestposts_blackwhite_h' => 'Reject the inserted Forum IDs (blacklisting) or accept them (whitelisting)',
 ));
 ?>
