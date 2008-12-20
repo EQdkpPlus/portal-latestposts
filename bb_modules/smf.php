@@ -30,8 +30,11 @@ $myBBquery  = "SELECT ms.ID_TOPIC as bb_topic_id, ms.subject as bb_topic_title,
               ms.ID_MSG as bb_message_id, ms.posterTime as bb_posttime, t.numReplies as bb_replies, 
               ms.ID_MEMBER as bb_poster_id, ms.posterName as bb_username
               FROM ".$table_messages." ms, ".$table_topics." t
-              WHERE ms.ID_MSG = t.ID_LAST_MSG
-              ORDER BY ms.posterTime DESC LIMIT ".$topicnumber;
+              WHERE ms.ID_MSG = t.ID_LAST_MSG ";
+if(is_array($privateforums)){
+  $myBBquery .= "t.ID_BOARD ".$black_or_white."(". implode(', ', $privateforums).") AND ";
+}
+$myBBquery .= "ORDER BY ms.posterTime DESC LIMIT ".$topicnumber;
 
 // Link
 function bbLinkGeneration($mode, $row){

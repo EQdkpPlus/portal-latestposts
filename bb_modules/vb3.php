@@ -25,8 +25,6 @@ $defprefix      = ($conf_plus['pk_latestposts_dbprefix']) ? $conf_plus['pk_lates
 $table_threads  = $defprefix. "thread";
 $table_posts    = $defprefix. "post";
 $table_users    = $defprefix. "user";
-$topicnumber    = ($conf_plus['pk_latestposts_amount']) ? $conf_plus['pk_latestposts_amount'] : 5;
-$privateforums  = ($conf_plus['pk_latestposts_privateforums']) ? explode(";", $conf_plus['pk_latestposts_privateforums']) : '';
 
 // Build the db query
 $myBBquery  = "SELECT t.threadid as bb_topic_id, t.title as bb_topic_title, 
@@ -37,7 +35,7 @@ $myBBquery  = "SELECT t.threadid as bb_topic_id, t.title as bb_topic_title,
               WHERE t.threadid = p.threadid
               AND t.open = '1' AND ";
 if(is_array($privateforums)){
-  $myBBquery .= "t.forumid NOT IN(". implode(', ', $privateforums).") AND ";
+  $myBBquery .= "t.forumid ".$black_or_white."(". implode(', ', $privateforums).") AND ";
 }
 $myBBquery .= "p.postid = t.lastpostid AND
               p.userid = u.userid
