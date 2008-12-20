@@ -50,8 +50,7 @@ function bbLinkGeneration($mode, $row){
   if($mode=='member'){
     return $conf_plus['pk_latestposts_bbpath'].'/profile.php?mode=viewprofile&u='.$row['bb_user_id'];
   }else{
-    #http://gladius.nethersturm.eu/forum/viewtopic.php?p=6471#6471
-    return $conf_plus['pk_latestposts_bbpath'].'/viewtopic.php?p='.$row['bb_post_id'].'#p'.$row['bb_post_id'];
+    return $conf_plus['pk_latestposts_bbpath'].'/viewtopic.php?p='.$row['bb_post_id'].'#'.$row['bb_post_id'];
   }
 }
 ?>

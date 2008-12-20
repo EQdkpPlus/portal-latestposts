@@ -44,5 +44,6 @@ $plang = array_merge($plang, array(
   'pk_latestposts_privateforums'=> 'ID of the private forums, seperated by semicolon',
   'pk_latestposts_privforums_h' => 'Private Forums will not be listed in the latest posts.',
   'pk_latestposts_plus2old'     => 'Plus Version too old. 0.6.2.0 Stable or higher required',
+  'pk_latestposts_newwindow'    => 'Open Topic Links in New window?',
 ));
 ?>
