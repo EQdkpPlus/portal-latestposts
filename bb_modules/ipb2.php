@@ -21,9 +21,9 @@ if ( !defined('EQDKP_INC') ){
 }
 
 // Define the tables & configuration options
-$table_topics = $conf_plus['pk_latestposts_dbprefix']. "topics";
-$table_members = $conf_plus['pk_latestposts_dbprefix']. "members";
-$topicnumber = ($conf_plus['pk_latestposts_amount']) ? $conf_plus['pk_latestposts_amount'] : 5;
+$defprefix      = ($conf_plus['pk_latestposts_dbprefix']) ? $conf_plus['pk_latestposts_dbprefix'] : 'ipb_';
+$table_topics   = $defprefix. "topics";
+$table_members  = $defprefix. "members";
 
 // Build the db query
 $myBBquery  = "SELECT t.tid as bb_topic_id, t.title as bb_topic_title, 

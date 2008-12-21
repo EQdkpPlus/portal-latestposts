@@ -21,9 +21,9 @@ if ( !defined('EQDKP_INC') ){
 }
 
 // Define the tables & configuration options
-$table_messages = $conf_plus['pk_latestposts_dbprefix']. "messages";
-$table_topics   = $conf_plus['pk_latestposts_dbprefix']. "topics";
-$topicnumber = ($conf_plus['pk_latestposts_amount']) ? $conf_plus['pk_latestposts_amount'] : 5;
+$defprefix      = ($conf_plus['pk_latestposts_dbprefix']) ? $conf_plus['pk_latestposts_dbprefix'] : 'smf_';
+$table_messages = $defprefix. "messages";
+$table_topics   = $defprefix. "topics";
 
 // Build the db query
 $myBBquery  = "SELECT ms.ID_TOPIC as bb_topic_id, ms.subject as bb_topic_title, 
