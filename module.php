@@ -152,7 +152,8 @@ if(!function_exists(latestposts_module)){
     }
     
     // Where should we open the links?
-    $myTarget = ($conf_plus['pk_latestposts_newwindow'] == '1') ? '_blank' : '_self';
+    $myTarget   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? '_blank' : '_self';
+    $myWrapper  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? '' : $eqdkp_root_path.'wrapper.php?id=lp&f=';
     
   	// Initiate the new Database Connection if needed
   	if($conf_plus['pk_latestposts_newdb'] == 1){
@@ -190,11 +191,11 @@ if(!function_exists(latestposts_module)){
         while($row = $mydb->fetch_record($bb_result)){
           $myOut .= "<tr valign='top' class='".$eqdkp->switch_row_class()."''>
                       <td>
-                        <a href='".bbLinkGeneration('topic', $row)."' target='".$myTarget."'>".$row['bb_topic_title']."</a>
+                        <a href='".$myWrapper.bbLinkGeneration('topic', $row)."' target='".$myTarget."'>".$row['bb_topic_title']."</a>
                       </td>
                       <td align='center'>".$row['bb_replies']."</td>
                       <td>".date('d.m.Y, H:i', $row['bb_posttime'])."</td>
-                      <td><a href='".bbLinkGeneration('member', $row)."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".bbLinkGeneration('topic', $row)."' target='_blank'><img src='".$eqdkp_root_path."portal/latestposts/images/icon_topic_latest.gif' /></a></td>
+                      <td><a href='".$myWrapper.bbLinkGeneration('member', $row)."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".$myWrapper.bbLinkGeneration('topic', $row)."' target='_blank'><img src='".$eqdkp_root_path."portal/latestposts/images/icon_topic_latest.gif' /></a></td>
                     </tr>";
         }
       }else{
