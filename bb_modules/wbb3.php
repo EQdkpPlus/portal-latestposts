@@ -42,9 +42,9 @@ $myBBquery .= "p.time = t.lastPostTime
 function bbLinkGeneration($mode, $row){
   global $conf_plus;
   if($mode=='member'){
-    return $conf_plus['pk_latestposts_bbpath'].'/index.php?page=User&userID='.$row['bb_user_id'];
+    return 'index.php?page=User&userID='.$row['bb_user_id'];
   }else{
-    return $conf_plus['pk_latestposts_bbpath'].'/index.php?page=Thread&threadID='.$row['bb_topic_id'].'&action=firstNew';
+    return 'index.php?page=Thread&threadID='.$row['bb_topic_id'].'&action=firstNew';
   }
 }
 ?>

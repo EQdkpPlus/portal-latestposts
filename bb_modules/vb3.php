@@ -45,9 +45,9 @@ $myBBquery .= "p.postid = t.lastpostid AND
 function bbLinkGeneration($mode, $row){
   global $conf_plus;
   if($mode=='member'){
-    return $conf_plus['pk_latestposts_bbpath'].'/member.php?u='.$row['bb_user_id'];
+    return '/member.php?u='.$row['bb_user_id'];
   }else{
-    return $conf_plus['pk_latestposts_bbpath'].'/showthread.php?p='.$row['bb_last_post'].'#post'.$row['bb_last_post'];
+    return '/showthread.php?p='.$row['bb_last_post'].'#post'.$row['bb_last_post'];
   }
 }
 ?>

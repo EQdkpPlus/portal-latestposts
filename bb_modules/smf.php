@@ -40,9 +40,9 @@ $myBBquery .= "ORDER BY ms.posterTime DESC LIMIT ".$topicnumber;
 function bbLinkGeneration($mode, $row){
   global $conf_plus;
   if($mode=='member'){
-    return $conf_plus['pk_latestposts_bbpath'].'/index.php?action=profile;u='.$row['bb_poster_id'];
+    return '/index.php?action=profile;u='.$row['bb_poster_id'];
   }else{
-    return $conf_plus['pk_latestposts_bbpath'].'/index.php?topic='.$row['bb_topic_id'].'.msg'.$row['bb_message_id'].';topicseen#new';
+    return '/index.php?topic='.$row['bb_topic_id'].'.msg'.$row['bb_message_id'].';topicseen#new';
   }
 }
 ?>

@@ -40,9 +40,9 @@ $myBBquery .= "ORDER BY t.last_post DESC LIMIT ".$topicnumber;
 function bbLinkGeneration($mode, $row){
   global $conf_plus;
   if($mode=='member'){
-    return $conf_plus['pk_latestposts_bbpath'].'/index.php?showuser='.$row['bb_poster_id'];
+    return '/index.php?showuser='.$row['bb_poster_id'];
   }else{
-    return $conf_plus['pk_latestposts_bbpath'].'/index.php?showtopic='.$row['bb_topic_id'].'&view=getlastpost';
+    return '/index.php?showtopic='.$row['bb_topic_id'].'&view=getlastpost';
   }
 }
 ?>

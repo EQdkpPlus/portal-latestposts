@@ -83,9 +83,9 @@ $portal_settings['latestposts'] = array(
                           'wbb3.php'      => 'WBB 3',
                         )
       ),
-  'pk_latestposts_bbpath'     => array(
-        'name'      => 'pk_latestposts_bbpath',
-        'language'  => 'pk_latestposts_bbpath',
+  'pk_latestposts_url'     => array(
+        'name'      => 'pk_latestposts_url',
+        'language'  => 'pk_latestposts_url',
         'property'  => 'text',
         'size'      => '30',
         'help'      => '',
@@ -150,10 +150,9 @@ if(!function_exists(latestposts_module)){
     if(EQDKPPLUS_VERSION < '0.6.2.0'){
       return $plang['pk_latestposts_plus2old'];
     }
-    
     // Where should we open the links?
     $myTarget   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? '_blank' : '_self';
-    $myWrapper  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? '' : $eqdkp_root_path.'wrapper.php?id=lp&f=';
+    $myWrapper  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $conf_plus['pk_latestposts_url'].'/' : $eqdkp_root_path.'wrapper.php?id=lp&f='.$conf_plus['pk_latestposts_url'].'/';
     
   	// Initiate the new Database Connection if needed
   	if($conf_plus['pk_latestposts_newdb'] == 1){

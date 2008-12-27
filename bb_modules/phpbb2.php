@@ -47,9 +47,9 @@ $myBBquery .= "p.post_id = t.topic_last_post_id AND
 function bbLinkGeneration($mode, $row){
   global $conf_plus;
   if($mode=='member'){
-    return $conf_plus['pk_latestposts_bbpath'].'/profile.php?mode=viewprofile&u='.$row['bb_user_id'];
+    return '/profile.php?mode=viewprofile&u='.$row['bb_user_id'];
   }else{
-    return $conf_plus['pk_latestposts_bbpath'].'/viewtopic.php?p='.$row['bb_post_id'].'#'.$row['bb_post_id'];
+    return '/viewtopic.php?p='.$row['bb_post_id'].'#'.$row['bb_post_id'];
   }
 }
 ?>
