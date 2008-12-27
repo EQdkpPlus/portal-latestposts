@@ -190,11 +190,11 @@ if(!function_exists(latestposts_module)){
         while($row = $mydb->fetch_record($bb_result)){
           $myOut .= "<tr valign='top' class='".$eqdkp->switch_row_class()."''>
                       <td>
-                        <a href='".$myWrapper.bbLinkGeneration('topic', $row)."' target='".$myTarget."'>".$row['bb_topic_title']."</a>
+                        <a href='".$myWrapper.rawurlencode(bbLinkGeneration('topic', $row))."' target='".$myTarget."'>".$row['bb_topic_title']."</a>
                       </td>
                       <td align='center'>".$row['bb_replies']."</td>
                       <td>".date('d.m.Y, H:i', $row['bb_posttime'])."</td>
-                      <td><a href='".$myWrapper.bbLinkGeneration('member', $row)."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".$myWrapper.bbLinkGeneration('topic', $row)."' target='_blank'><img src='".$eqdkp_root_path."portal/latestposts/images/icon_topic_latest.gif' /></a></td>
+                      <td><a href='".$myWrapper.rawurlencode(bbLinkGeneration('member', $row))."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".$myWrapper.rawurlencode(bbLinkGeneration('topic', $row))."' target='_blank'><img src='".$eqdkp_root_path."portal/latestposts/images/icon_topic_latest.gif' /></a></td>
                     </tr>";
         }
       }else{
