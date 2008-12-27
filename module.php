@@ -214,8 +214,8 @@ if(!function_exists(latestposts_module)){
           }
           $myOut .= "<tr valign='top' class='".$eqdkp->switch_row_class()."''>
                       <td>
-                        <a href='".bbLinkGeneration('topic', $row)."' target='".$myTarget."'>".$short_title."</a> (".$row['bb_replies'].")<br/>
-                        ".date('d.m.y, H:i', $row['bb_posttime']).", <a href='".bbLinkGeneration('member', $row)."' target='".$myTarget."'>".$row['bb_username']."</a>
+                        <a href='".$myWrapper.rawurlencode(bbLinkGeneration('topic', $row))."' target='".$myTarget."'>".$short_title."</a> (".$row['bb_replies'].")<br/>
+                        ".date('d.m.y, H:i', $row['bb_posttime']).", <a href='".$myWrapper.rawurlencode(bbLinkGeneration('member', $row))."' target='".$myTarget."'>".$row['bb_username']."</a>
                       </td>
                     </tr>";
         }
