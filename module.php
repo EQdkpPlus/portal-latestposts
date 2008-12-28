@@ -188,13 +188,15 @@ if(!function_exists(latestposts_module)){
                 </tr>";
       if($bb_result = $mydb->query($myBBquery)){
         while($row = $mydb->fetch_record($bb_result)){
+          $member_link  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('member', $row) : $myWrapper.rawurlencode(bbLinkGeneration('member', $row));
+          $topic_link   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('topic', $row) : $myWrapper.rawurlencode(bbLinkGeneration('topic', $row));
           $myOut .= "<tr valign='top' class='".$eqdkp->switch_row_class()."''>
                       <td>
-                        <a href='".$myWrapper.rawurlencode(bbLinkGeneration('topic', $row))."' target='".$myTarget."'>".$row['bb_topic_title']."</a>
+                        <a href='".$topic_link."' target='".$myTarget."'>".$row['bb_topic_title']."</a>
                       </td>
                       <td align='center'>".$row['bb_replies']."</td>
                       <td>".date('d.m.Y, H:i', $row['bb_posttime'])."</td>
-                      <td><a href='".$myWrapper.rawurlencode(bbLinkGeneration('member', $row))."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".$myWrapper.rawurlencode(bbLinkGeneration('topic', $row))."' target='_blank'><img src='".$eqdkp_root_path."portal/latestposts/images/icon_topic_latest.gif' /></a></td>
+                      <td><a href='".$member_link."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".$topic_link."' target='_blank'><img src='".$eqdkp_root_path."portal/latestposts/images/icon_topic_latest.gif' /></a></td>
                     </tr>";
         }
       }else{
@@ -212,10 +214,12 @@ if(!function_exists(latestposts_module)){
           if (strlen($row['bb_topic_title']) < $myTitleLength){
             $short_title = substr($row['bb_topic_title'], 0, $myTitleLength)."...";
           }
+          $member_link  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('member', $row) : $myWrapper.rawurlencode(bbLinkGeneration('member', $row));
+          $topic_link   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('topic', $row) : $myWrapper.rawurlencode(bbLinkGeneration('topic', $row));
           $myOut .= "<tr valign='top' class='".$eqdkp->switch_row_class()."''>
                       <td>
-                        <a href='".$myWrapper.rawurlencode(bbLinkGeneration('topic', $row))."' target='".$myTarget."'>".$short_title."</a> (".$row['bb_replies'].")<br/>
-                        ".date('d.m.y, H:i', $row['bb_posttime']).", <a href='".$myWrapper.rawurlencode(bbLinkGeneration('member', $row))."' target='".$myTarget."'>".$row['bb_username']."</a>
+                        <a href='".$topic_link."' target='".$myTarget."'>".$short_title."</a> (".$row['bb_replies'].")<br/>
+                        ".date('d.m.y, H:i', $row['bb_posttime']).", <a href='".$member_link."' target='".$myTarget."'>".$row['bb_username']."</a>
                       </td>
                     </tr>";
         }
