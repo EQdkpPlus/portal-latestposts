@@ -144,10 +144,11 @@ $portal_settings['latestposts'] = array(
 
 if(!function_exists(latestposts_module)){
   function latestposts_module(){
-  	global $eqdkp , $user , $tpl, $db, $plang, $conf_plus, $wherevalue, $sql_db, $eqdkp_root_path;
+  	global $eqdkp, $user, $db, $plang, $conf_plus, $wherevalue, $eqdkp_root_path;
+  	global $dbtype, $dbhost, $dbname, $dbuser , $dbpass, $table_prefix, $sql_db;
     
     // This Module requires EQDKP PLUS 0.6.2.x
-    if(EQDKPPLUS_VERSION < '0.6.2.0'){
+    if(EQDKPPLUS_VERSION < '0.6.2.1'){
       return $plang['pk_latestposts_plus2old'];
     }
     // Where should we open the links?
@@ -227,6 +228,10 @@ if(!function_exists(latestposts_module)){
       $myOut .= "</table>";
     }
     $mydb->free_result($bb_result);
+    
+    // hack to prevent $db missfunction
+    $db = new $sql_db();
+    $db->sql_connect($dbhost, $dbname, $dbuser, $dbpass, false);
     return $myOut;
   }
 }
