@@ -144,8 +144,7 @@ $portal_settings['latestposts'] = array(
 
 if(!function_exists(latestposts_module)){
   function latestposts_module(){
-  	global $eqdkp, $user, $db, $plang, $conf_plus, $wherevalue, $eqdkp_root_path;
-  	global $dbtype, $dbhost, $dbname, $dbuser , $dbpass, $table_prefix, $sql_db;
+  	global $eqdkp, $user, $db, $plang, $conf_plus, $wherevalue, $eqdkp_root_path, $sql_db;
     
     // This Module requires EQDKP PLUS 0.6.2.x
     if(EQDKPPLUS_VERSION < '0.6.2.1'){
@@ -156,11 +155,11 @@ if(!function_exists(latestposts_module)){
     $myWrapper  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $conf_plus['pk_latestposts_url'].'/' : $eqdkp_root_path.'wrapper.php?id=lp&f='.$conf_plus['pk_latestposts_url'].'/';
     
   	// Initiate the new Database Connection if needed
-  	if($conf_plus['pk_latestposts_newdb'] == 1){
+  	if($conf_plus['pk_latestposts_newdb'] != 1){
+      $mydb = $db;
+    }else{
       $mydb = new $sql_db();
       $mydb->sql_connect($conf_plus['pk_latestposts_dbhost'], $conf_plus['pk_latestposts_dbname'], $conf_plus['pk_latestposts_dbuser'], $conf_plus['pk_latestposts_dbpassword'], false);
-    }else{
-      $mydb = $db;
     }
   	
   	// Set some Variables we're using in the BB Modules..
@@ -228,10 +227,6 @@ if(!function_exists(latestposts_module)){
       $myOut .= "</table>";
     }
     $mydb->free_result($bb_result);
-    
-    // hack to prevent $db missfunction
-    $db = new $sql_db();
-    $db->sql_connect($dbhost, $dbname, $dbuser, $dbpass, false);
     return $myOut;
   }
 }
