@@ -21,10 +21,9 @@ if ( !defined('EQDKP_INC') ){
 }
 
 // Define the tables & configuration options
-$defprefix      = ($conf_plus['pk_latestposts_dbprefix']) ? $conf_plus['pk_latestposts_dbprefix'] : 'vb_';
-$table_threads  = $defprefix. "thread";
-$table_posts    = $defprefix. "post";
-$table_users    = $defprefix. "user";
+$table_threads  = $conf_plus['pk_latestposts_dbprefix']. "thread";
+$table_posts    = $conf_plus['pk_latestposts_dbprefix']. "post";
+$table_users    = $conf_plus['pk_latestposts_dbprefix']. "user";
 
 // Build the db query
 $myBBquery  = "SELECT t.threadid as bb_topic_id, t.title as bb_topic_title, 

@@ -21,11 +21,10 @@ if ( !defined('EQDKP_INC') ){
 }
 
 // Define the tables & configuration options
-$defprefix      = ($conf_plus['pk_latestposts_dbprefix']) ? $conf_plus['pk_latestposts_dbprefix'] : 'phpbb_';
-$table_topics   = $defprefix. "topics";
-$table_forums   = $defprefix. "forums";
-$table_posts    = $defprefix. "posts";
-$table_users    = $defprefix. "users";
+$table_topics   = $conf_plus['pk_latestposts_dbprefix']. "topics";
+$table_forums   = $conf_plus['pk_latestposts_dbprefix']. "forums";
+$table_posts    = $conf_plus['pk_latestposts_dbprefix']. "posts";
+$table_users    = $conf_plus['pk_latestposts_dbprefix']. "users";
 
 // Build the db query
 $myBBquery  = "SELECT t.topic_id as bb_topic_id, t.topic_title as bb_topic_title, 
