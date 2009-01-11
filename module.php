@@ -144,7 +144,8 @@ $portal_settings['latestposts'] = array(
 
 if(!function_exists(latestposts_module)){
   function latestposts_module(){
-  	global $eqdkp, $user, $db, $plang, $conf_plus, $wherevalue, $eqdkp_root_path, $sql_db;
+  	global $eqdkp, $user, $db, $plang, $conf_plus, $wherevalue, $eqdkp_root_path;
+    global $dbhost, $dbname, $dbuser, $dbpass, $sql_db;
     
     // This Module requires EQDKP PLUS 0.6.2.x
     if(EQDKPPLUS_VERSION < '0.6.2.1'){
@@ -211,8 +212,10 @@ if(!function_exists(latestposts_module)){
       if($bb_result = $mydb->query($myBBquery)){
         $myTitleLength = ($conf_plus['pk_latestposts_trimtitle']) ? $conf_plus['pk_latestposts_trimtitle'] : 40;
         while($row = $mydb->fetch_record($bb_result)){
-          if (strlen($row['bb_topic_title']) < $myTitleLength){
+          if (strlen($row['bb_topic_title']) > $myTitleLength){
             $short_title = substr($row['bb_topic_title'], 0, $myTitleLength)."...";
+          }else{
+            $short_title = $row['bb_topic_title'];
           }
           $member_link  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('member', $row) : $myWrapper.rawurlencode(bbLinkGeneration('member', $row));
           $topic_link   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('topic', $row) : $myWrapper.rawurlencode(bbLinkGeneration('topic', $row));
@@ -227,6 +230,13 @@ if(!function_exists(latestposts_module)){
       $myOut .= "</table>";
     }
     $mydb->free_result($bb_result);
+    
+    // hack to prevent $db missfunction
+    if($conf_plus['pk_latestposts_newdb'] == 1){
+      $db = new $sql_db();
+      $db->sql_connect($dbhost, $dbname, $dbuser, $dbpass, false);
+    }
+    
     return $myOut;
   }
 }
