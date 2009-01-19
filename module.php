@@ -230,12 +230,7 @@ if(!function_exists(latestposts_module)){
       $myOut .= "</table>";
     }
     $mydb->free_result($bb_result);
-    
-    // hack to prevent $db missfunction
-    if($conf_plus['pk_latestposts_newdb'] == 1){
-      $db = new $sql_db();
-      $db->sql_connect($dbhost, $dbname, $dbuser, $dbpass, false);
-    }
+    $mydb->close_db();
     
     return $myOut;
   }
