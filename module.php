@@ -23,7 +23,7 @@ if ( !defined('EQDKP_INC') ){
 $portal_module['latestposts'] = array(
 			'name'			    => 'Latest Forum Posts',
 			'path'			    => 'latestposts',
-			'version'		    => '1.0.0',
+			'version'		    => '1.1.0',
 			'author'        => 'WalleniuM',
 			'contact'		    => 'http://www.eqdkp-plus.com',
 			'description'   => 'See the latest Forum Posts',
@@ -230,7 +230,7 @@ if(!function_exists(latestposts_module)){
       $myOut .= "</table>";
     }
     $mydb->free_result($bb_result);
-    $mydb->close_db();
+    if($conf_plus['pk_latestposts_newdb'] == 1){ $mydb->close_db(); }
     
     return $myOut;
   }
