@@ -90,6 +90,13 @@ $portal_settings['latestposts'] = array(
         'size'      => '30',
         'help'      => '',
       ),
+    'pk_latestposts_dbprefix'     => array(
+        'name'      => 'pk_latestposts_dbprefix',
+        'language'  => 'pk_latestposts_dbprefix',
+        'property'  => 'text',
+        'size'      => '30',
+        'help'      => '',
+      ),
    'pk_latestposts_newdb'     => array(
         'name'      => 'pk_latestposts_newdb',
         'language'  => 'pk_latestposts_newdb',
@@ -122,13 +129,6 @@ $portal_settings['latestposts'] = array(
    'pk_latestposts_dbpassword'     => array(
         'name'      => 'pk_latestposts_dbpassword',
         'language'  => 'pk_latestposts_dbpassword',
-        'property'  => 'text',
-        'size'      => '30',
-        'help'      => '',
-      ),
-   'pk_latestposts_dbprefix'     => array(
-        'name'      => 'pk_latestposts_dbprefix',
-        'language'  => 'pk_latestposts_dbprefix',
         'property'  => 'text',
         'size'      => '30',
         'help'      => '',
