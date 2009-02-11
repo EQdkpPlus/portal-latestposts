@@ -97,6 +97,13 @@ $portal_settings['latestposts'] = array(
         'size'      => '30',
         'help'      => '',
       ),
+    'pk_latestposts_trimtitle'     => array(
+        'name'      => 'pk_latestposts_trimtitle',
+        'language'  => 'pk_latestposts_trimtitle',
+        'property'  => 'text',
+        'size'      => '6',
+        'help'      => 'pk_latestposts_trimtitle_h',
+      ),
    'pk_latestposts_newdb'     => array(
         'name'      => 'pk_latestposts_newdb',
         'language'  => 'pk_latestposts_newdb',
@@ -132,13 +139,6 @@ $portal_settings['latestposts'] = array(
         'property'  => 'text',
         'size'      => '30',
         'help'      => '',
-      ),
-    'pk_latestposts_trimtitle'     => array(
-        'name'      => 'pk_latestposts_trimtitle',
-        'language'  => 'pk_latestposts_trimtitle',
-        'property'  => 'text',
-        'size'      => '6',
-        'help'      => 'pk_latestposts_trimtitle_h',
       ),
 );
 
