@@ -153,7 +153,7 @@ if(!function_exists(latestposts_module)){
     }
     // Where should we open the links?
     $myTarget   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? '_blank' : '_self';
-    $myWrapper  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $conf_plus['pk_latestposts_url'].'/' : $eqdkp_root_path.'wrapper.php?id=lp&f='.$conf_plus['pk_latestposts_url'].'/';
+    $myWrapper  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $conf_plus['pk_latestposts_url'].'/' : $eqdkp_root_path.'wrapper.php?id=lp&f='.rawurlencode($conf_plus['pk_latestposts_url'].'/');
     
   	// Initiate the new Database Connection if needed
   	if($conf_plus['pk_latestposts_newdb'] != 1){
@@ -189,8 +189,8 @@ if(!function_exists(latestposts_module)){
                 </tr>";
       if($bb_result = $mydb->query($myBBquery)){
         while($row = $mydb->fetch_record($bb_result)){
-          $member_link  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('member', $row) : rawurlencode($myWrapper.bbLinkGeneration('member', $row));
-          $topic_link   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('topic', $row) : rawurlencode($myWrapper.bbLinkGeneration('topic', $row));
+          $member_link  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('member', $row) : $myWrapper.rawurlencode(bbLinkGeneration('member', $row));
+          $topic_link   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('topic', $row) : $myWrapper.rawurlencode(bbLinkGeneration('topic', $row));
           $myOut .= "<tr valign='top' class='".$eqdkp->switch_row_class()."''>
                       <td>
                         <a href='".$topic_link."' target='".$myTarget."'>".$row['bb_topic_title']."</a>
@@ -217,8 +217,8 @@ if(!function_exists(latestposts_module)){
           }else{
             $short_title = $row['bb_topic_title'];
           }
-          $member_link  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('member', $row) : rawurlencode($myWrapper.bbLinkGeneration('member', $row));
-          $topic_link   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('topic', $row) : rawurlencode($myWrapper.bbLinkGeneration('topic', $row));
+          $member_link  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('member', $row) : $myWrapper.rawurlencode(bbLinkGeneration('member', $row));
+          $topic_link   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('topic', $row) : $myWrapper.rawurlencode(bbLinkGeneration('topic', $row));
           $myOut .= "<tr valign='top' class='".$eqdkp->switch_row_class()."''>
                       <td>
                         <a href='".$topic_link."' target='".$myTarget."'>".$short_title."</a> (".$row['bb_replies'].")<br/>
