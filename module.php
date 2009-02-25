@@ -165,8 +165,18 @@ if(!function_exists(latestposts_module)){
   	
   	// Set some Variables we're using in the BB Modules..
   	$topicnumber    = ($conf_plus['pk_latestposts_amount']) ? $conf_plus['pk_latestposts_amount'] : 5;
-    $privateforums  = ($conf_plus['pk_latestposts_privateforums']) ? explode(";", $conf_plus['pk_latestposts_privateforums']) : '';
     $black_or_white = ($conf_plus['pk_latestposts_blackwhitelist'] == 'white') ? 'IN' : 'NOT IN';
+  	
+  	//Filter the Filters.. :D
+  	$privateforums_tmp  = ($conf_plus['pk_latestposts_privateforums']) ? explode(";", $conf_plus['pk_latestposts_privateforums']) : '';
+    if(is_array($privateforums_tmp)){
+      $privateforums = array();
+      foreach($privateforums_tmp as $mynumbertofilter){
+        if(trim($mynumbertofilter) != ''){
+          $privateforums[] = trim($mynumbertofilter);
+        }
+      }
+    }
   	
   	// include the BB Module File...
   	$bbModule = $eqdkp_root_path . 'portal/latestposts/bb_modules/'.$conf_plus['pk_latestposts_bbmodule'];
