@@ -33,7 +33,7 @@ $myBBquery  = "SELECT t.threadID as bb_topic_id, t.topic as bb_topic_title,
               FROM ".$table_threads." t, ".$table_posts." p
               WHERE t.threadID = p.threadid AND ";
 if(is_array($privateforums)){
-  $myBBquery .= "t.boardID ".$black_or_white."(". implode(', ', $privateforums).") AND ";
+  $myBBquery .= "AND t.boardID ".$black_or_white."(". implode(', ', $privateforums).") ";
 }
 $myBBquery .= "p.time = t.lastPostTime 
               ORDER BY t.lastPostTime DESC LIMIT ".$topicnumber;

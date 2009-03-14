@@ -31,7 +31,7 @@ $myBBquery  = "SELECT ms.ID_TOPIC as bb_topic_id, ms.subject as bb_topic_title,
               FROM ".$table_messages." ms, ".$table_topics." t
               WHERE ms.ID_MSG = t.ID_LAST_MSG ";
 if(is_array($privateforums)){
-  $myBBquery .= "t.ID_BOARD ".$black_or_white."(". implode(', ', $privateforums).") AND ";
+  $myBBquery .= " AND t.ID_BOARD ".$black_or_white."(". implode(', ', $privateforums).") ";
 }
 $myBBquery .= "ORDER BY ms.posterTime DESC LIMIT ".$topicnumber;
 
