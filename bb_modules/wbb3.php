@@ -31,11 +31,11 @@ $myBBquery  = "SELECT t.threadID as bb_topic_id, t.topic as bb_topic_title,
               t.replies as bb_replies, t.lastPosterID as bb_user_id, 
               t.lastPoster as bb_username
               FROM ".$table_threads." t, ".$table_posts." p
-              WHERE t.threadID = p.threadid AND ";
+              WHERE t.threadID = p.threadid";
 if(is_array($privateforums)){
-  $myBBquery .= "AND t.boardID ".$black_or_white."(". implode(', ', $privateforums).") ";
+  $myBBquery .= " AND t.boardID ".$black_or_white."(". implode(', ', $privateforums).")";
 }
-$myBBquery .= "p.time = t.lastPostTime 
+$myBBquery .= " AND p.time = t.lastPostTime 
               ORDER BY t.lastPostTime DESC LIMIT ".$topicnumber;
 
 // Link
