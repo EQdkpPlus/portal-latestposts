@@ -142,105 +142,126 @@ $portal_settings['latestposts'] = array(
       ),
 );
 
-if(!function_exists(latestposts_module)){
-  function latestposts_module(){
+if(!function_exists(latestposts_module))
+{
+  function latestposts_module()
+  {
   	global $eqdkp, $user, $db, $plang, $conf_plus, $wherevalue, $eqdkp_root_path;
-    global $dbhost, $dbname, $dbuser, $dbpass, $sql_db;
+    global $dbhost, $dbname, $dbuser, $dbpass, $sql_db, $pdc;
     
-    // This Module requires EQDKP PLUS 0.6.2.x
-    if(EQDKPPLUS_VERSION < '0.6.2.1'){
-      return $plang['pk_latestposts_plus2old'];
-    }
-    // Where should we open the links?
-    $myTarget   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? '_blank' : '_self';
-    $myWrapper  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $conf_plus['pk_latestposts_url'].'/' : $eqdkp_root_path.'wrapper.php?id=lp&f='.rawurlencode($conf_plus['pk_latestposts_url'].'/');
-    
-  	// Initiate the new Database Connection if needed
-  	if($conf_plus['pk_latestposts_newdb'] != 1){
-      $mydb = $db;
-    }else{
-      $mydb = new $sql_db();
-      $mydb->sql_connect($conf_plus['pk_latestposts_dbhost'], $conf_plus['pk_latestposts_dbname'], $conf_plus['pk_latestposts_dbuser'], $conf_plus['pk_latestposts_dbpassword'], false);
-    }
-  	
-  	// Set some Variables we're using in the BB Modules..
-  	$topicnumber    = ($conf_plus['pk_latestposts_amount']) ? $conf_plus['pk_latestposts_amount'] : 5;
-    $black_or_white = ($conf_plus['pk_latestposts_blackwhitelist'] == 'white') ? 'IN' : 'NOT IN';
-  	
-  	//Filter the Filters.. :D
-  	$privateforums_tmp  = ($conf_plus['pk_latestposts_privateforums']) ? explode(";", $conf_plus['pk_latestposts_privateforums']) : '';
-    if(is_array($privateforums_tmp)){
-      $privateforums = array();
-      foreach($privateforums_tmp as $mynumbertofilter){
-        if(trim($mynumbertofilter) != ''){
-          $privateforums[] = trim($mynumbertofilter);
-        }
-      }
-    }
-  	
-  	// include the BB Module File...
-  	$bbModule = $eqdkp_root_path . 'portal/latestposts/bb_modules/'.$conf_plus['pk_latestposts_bbmodule'];
-  	if(is_file($bbModule)){
-      include($bbModule);
-      if(!$myBBquery){
-        return $plang['portal_latestposts_invmodule'];
-      }
-    }else{
-      return $plang['portal_latestposts_nomodule'];
-    }
-    
-    // Middle Output
-    if($wherevalue == 'middle'){
-      $myOut = "<table cellpadding='3' cellSpacing='2' width='100%'>
-                <tr>
-                  <th width='60%'>".$plang['pk_latestposts_title']."</th>
-                  <th width='10%'>".$plang['pk_latestposts_posts']."</th>
-                  <th width='30%' colspan='2'>".$plang['pk_latestposts_lastpost']."</th>
-                </tr>";
-      if($bb_result = $mydb->query($myBBquery)){
-        while($row = $mydb->fetch_record($bb_result)){
-          $member_link  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('member', $row) : $myWrapper.rawurlencode(bbLinkGeneration('member', $row));
-          $topic_link   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('topic', $row) : $myWrapper.rawurlencode(bbLinkGeneration('topic', $row));
-          $myOut .= "<tr valign='top' class='".$eqdkp->switch_row_class()."''>
-                      <td>
-                        <a href='".$topic_link."' target='".$myTarget."'>".$row['bb_topic_title']."</a>
-                      </td>
-                      <td align='center'>".$row['bb_replies']."</td>
-                      <td>".date('d.m.Y, H:i', $row['bb_posttime'])."</td>
-                      <td><a href='".$member_link."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".$topic_link."' target='_blank'><img src='".$eqdkp_root_path."portal/latestposts/images/icon_topic_latest.gif' /></a></td>
-                    </tr>";
-        }
-      }else{
-        $myOut .= "<tr valign='top'>
-                      <td colspan='3'>".$plang['pk_latestposts_noentries']."</td
-                    </tr>";
-      }
-      $myOut .= "</table>";
-    }else{
-      // Sidebar Output
-      $myOut = "<table cellpadding='3' cellSpacing='2' width='100%'>";
-      if($bb_result = $mydb->query($myBBquery)){
-        $myTitleLength = ($conf_plus['pk_latestposts_trimtitle']) ? $conf_plus['pk_latestposts_trimtitle'] : 40;
-        while($row = $mydb->fetch_record($bb_result)){
-          if (strlen($row['bb_topic_title']) > $myTitleLength){
-            $short_title = substr($row['bb_topic_title'], 0, $myTitleLength)."...";
-          }else{
-            $short_title = $row['bb_topic_title'];
-          }
-          $member_link  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('member', $row) : $myWrapper.rawurlencode(bbLinkGeneration('member', $row));
-          $topic_link   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('topic', $row) : $myWrapper.rawurlencode(bbLinkGeneration('topic', $row));
-          $myOut .= "<tr valign='top' class='".$eqdkp->switch_row_class()."''>
-                      <td>
-                        <a href='".$topic_link."' target='".$myTarget."'>".$short_title."</a> (".$row['bb_replies'].")<br/>
-                        ".date('d.m.y, H:i', $row['bb_posttime']).", <a href='".$member_link."' target='".$myTarget."'>".$row['bb_username']."</a>
-                      </td>
-                    </tr>";
-        }
-      }
-      $myOut .= "</table>";
-    }
-    $mydb->free_result($bb_result);
-    if($conf_plus['pk_latestposts_newdb'] == 1){ $mydb->close_db(); }
+  	$myOut = $pdc->get('portal.modul.latestposts',false,true);
+  	if (!$myOut) 
+  	{ 
+  			    
+
+	    // This Module requires EQDKP PLUS 0.6.2.x
+	    if(EQDKPPLUS_VERSION < '0.6.2.1'){
+	      return $plang['pk_latestposts_plus2old'];
+	    }
+	    // Where should we open the links?
+	    $myTarget   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? '_blank' : '_self';
+	    $myWrapper  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $conf_plus['pk_latestposts_url'].'/' : $eqdkp_root_path.'wrapper.php?id=lp&f='.rawurlencode($conf_plus['pk_latestposts_url'].'/');
+	    
+	  	// Initiate the new Database Connection if needed
+	  	if($conf_plus['pk_latestposts_newdb'] != 1){
+	      $mydb = $db;
+	    }else{
+	      $mydb = new $sql_db();
+	      $mydb->sql_connect($conf_plus['pk_latestposts_dbhost'], $conf_plus['pk_latestposts_dbname'], $conf_plus['pk_latestposts_dbuser'], $conf_plus['pk_latestposts_dbpassword'], false);
+	    }
+	  	
+	  	// Set some Variables we're using in the BB Modules..
+	  	$topicnumber    = ($conf_plus['pk_latestposts_amount']) ? $conf_plus['pk_latestposts_amount'] : 5;
+	    $black_or_white = ($conf_plus['pk_latestposts_blackwhitelist'] == 'white') ? 'IN' : 'NOT IN';
+	  	
+	  	//Filter the Filters.. :D
+	  	$privateforums_tmp  = ($conf_plus['pk_latestposts_privateforums']) ? explode(";", $conf_plus['pk_latestposts_privateforums']) : '';
+	    if(is_array($privateforums_tmp)){
+	      $privateforums = array();
+	      foreach($privateforums_tmp as $mynumbertofilter){
+	        if(trim($mynumbertofilter) != ''){
+	          $privateforums[] = trim($mynumbertofilter);
+	        }
+	      }
+	    }
+	  	
+	  	// include the BB Module File...
+	  	$bbModule = $eqdkp_root_path . 'portal/latestposts/bb_modules/'.$conf_plus['pk_latestposts_bbmodule'];
+	  	if(is_file($bbModule)){
+	      include($bbModule);
+	      if(!$myBBquery){
+	        return $plang['portal_latestposts_invmodule'];
+	      }
+	    }else{
+	      return $plang['portal_latestposts_nomodule'];
+	    }
+	    
+	    // Middle Output
+	    if($wherevalue == 'middle')
+	    {
+	      $myOut = "<table cellpadding='3' cellSpacing='2' width='100%'>
+	                <tr>
+	                  <th width='60%'>".$plang['pk_latestposts_title']."</th>
+	                  <th width='10%'>".$plang['pk_latestposts_posts']."</th>
+	                  <th width='30%' colspan='2'>".$plang['pk_latestposts_lastpost']."</th>
+	                </tr>";
+	      if($bb_result = $mydb->query($myBBquery))
+	      {
+	      	$sucess = true;
+	        while($row = $mydb->fetch_record($bb_result))
+	        {
+	          $member_link  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('member', $row) : $myWrapper.rawurlencode(bbLinkGeneration('member', $row));
+	          $topic_link   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('topic', $row) : $myWrapper.rawurlencode(bbLinkGeneration('topic', $row));
+	          $myOut .= "<tr valign='top' class='".$eqdkp->switch_row_class()."''>
+	                      <td>
+	                        <a href='".$topic_link."' target='".$myTarget."'>".$row['bb_topic_title']."</a>
+	                      </td>
+	                      <td align='center'>".$row['bb_replies']."</td>
+	                      <td>".date('d.m.Y, H:i', $row['bb_posttime'])."</td>
+	                      <td><a href='".$member_link."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".$topic_link."' target='_blank'><img src='".$eqdkp_root_path."portal/latestposts/images/icon_topic_latest.gif' /></a></td>
+	                    </tr>";
+	        }
+	      }else{
+	        $myOut .= "<tr valign='top'>
+	                      <td colspan='3'>".$plang['pk_latestposts_noentries']."</td
+	                    </tr>";
+	      }
+	      $myOut .= "</table>";
+	    }else
+	    {
+	      // Sidebar Output
+	      $myOut = "<table cellpadding='3' cellSpacing='2' width='100%'>";
+	      if($bb_result = $mydb->query($myBBquery))
+	      {
+	      	$sucess = true;	      	
+	        $myTitleLength = ($conf_plus['pk_latestposts_trimtitle']) ? $conf_plus['pk_latestposts_trimtitle'] : 40;
+	        while($row = $mydb->fetch_record($bb_result))
+	        {
+	          if (strlen($row['bb_topic_title']) > $myTitleLength){
+	            $short_title = substr($row['bb_topic_title'], 0, $myTitleLength)."...";
+	          }else{
+	            $short_title = $row['bb_topic_title'];
+	          }
+	          $member_link  = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('member', $row) : $myWrapper.rawurlencode(bbLinkGeneration('member', $row));
+	          $topic_link   = ($conf_plus['pk_latestposts_newwindow'] == '1') ? $myWrapper.bbLinkGeneration('topic', $row) : $myWrapper.rawurlencode(bbLinkGeneration('topic', $row));
+	          $myOut .= "<tr valign='top' class='".$eqdkp->switch_row_class()."''>
+	                      <td>
+	                        <a href='".$topic_link."' target='".$myTarget."'>".$short_title."</a> (".$row['bb_replies'].")<br/>
+	                        ".date('d.m.y, H:i', $row['bb_posttime']).", <a href='".$member_link."' target='".$myTarget."'>".$row['bb_username']."</a>
+	                      </td>
+	                    </tr>";
+	        }
+	      }
+	      $myOut .= "</table>";
+	    }
+	    $mydb->free_result($bb_result);
+	    if($conf_plus['pk_latestposts_newdb'] == 1){ $mydb->close_db(); }
+	    
+	    if ($sucess) {
+	    	$pdc->put('portal.modul.latestposts',$myOut,300,false,true);
+	    }
+	    
+  	}    
     
     return $myOut;
   }
