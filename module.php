@@ -81,6 +81,7 @@ $portal_settings['latestposts'] = array(
                           'smf.php'       => 'SMF',
                           'vb3.php'       => 'vBulletin 3',
                           'wbb3.php'      => 'WBB 3',
+                          'e107.php'      => 'e107',
                         )
       ),
   'pk_latestposts_url'     => array(
