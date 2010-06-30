@@ -21,10 +21,10 @@ if ( !defined('EQDKP_INC') ){
 }
 
 // Define the tables & configuration options
-$table_topics   = $conf_plus['pk_latestposts_dbprefix']. "topics";
-$table_forums   = $conf_plus['pk_latestposts_dbprefix']. "forums";
-$table_posts    = $conf_plus['pk_latestposts_dbprefix']. "posts";
-$table_users    = $conf_plus['pk_latestposts_dbprefix']. "users";
+$table_topics   = trim($conf_plus['pk_latestposts_dbprefix']). "topics";
+$table_forums   = trim($conf_plus['pk_latestposts_dbprefix']). "forums";
+$table_posts    = trim($conf_plus['pk_latestposts_dbprefix']). "posts";
+$table_users    = trim($conf_plus['pk_latestposts_dbprefix']). "users";
 
 // Build the db query
 $myBBquery  = "SELECT t.topic_id as bb_topic_id, t.topic_title as bb_topic_title, 
@@ -40,7 +40,7 @@ if(is_array($privateforums)){
 }
 $myBBquery .= "p.post_id = t.topic_last_post_id AND
               p.poster_id = u.user_id
-              ORDER BY p.post_id DESC LIMIT ".$topicnumber;
+              ORDER BY p.post_id DESC LIMIT ".trim($topicnumber);
             
 // Link
 function bbLinkGeneration($mode, $row){

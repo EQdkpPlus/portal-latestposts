@@ -21,8 +21,8 @@ if ( !defined('EQDKP_INC') ){
 }
 
 // Define the tables & configuration options
-$table_messages = $conf_plus['pk_latestposts_dbprefix']. "messages";
-$table_topics   = $conf_plus['pk_latestposts_dbprefix']. "topics";
+$table_messages = trim($conf_plus['pk_latestposts_dbprefix']). "messages";
+$table_topics   = trim($conf_plus['pk_latestposts_dbprefix']). "topics";
 
 // Build the db query
 $myBBquery  = "SELECT ms.ID_TOPIC as bb_topic_id, ms.subject as bb_topic_title, 
@@ -33,7 +33,7 @@ $myBBquery  = "SELECT ms.ID_TOPIC as bb_topic_id, ms.subject as bb_topic_title,
 if(is_array($privateforums)){
   $myBBquery .= " AND t.ID_BOARD ".$black_or_white."(". implode(', ', $privateforums).") ";
 }
-$myBBquery .= "ORDER BY ms.posterTime DESC LIMIT ".$topicnumber;
+$myBBquery .= "ORDER BY ms.posterTime DESC LIMIT ".trim($topicnumber);
 
 // Link
 function bbLinkGeneration($mode, $row){

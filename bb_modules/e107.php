@@ -21,7 +21,7 @@ if ( !defined('EQDKP_INC') ){
 }
 
 // Define the tables & configuration options
-$defprefix      = ($conf_plus['pk_latestposts_dbprefix']);
+$defprefix      = trim($conf_plus['pk_latestposts_dbprefix']);
 $table_topics   = $defprefix. "forum_t";
 $table_members  = $defprefix. "user";
 
@@ -34,7 +34,7 @@ $myBBquery  = "SELECT t.thread_id as bb_topic_id, t.thread_name as bb_topic_titl
 if(is_array($privateforums)){
   $myBBquery .= " AND t.thread_forum_id ".$black_or_white."(". implode(', ', $privateforums).") ";
 }
-$myBBquery .= "ORDER BY t.thread_lastpost DESC LIMIT ".$topicnumber;
+$myBBquery .= "ORDER BY t.thread_lastpost DESC LIMIT ".trim($topicnumber);
 
 // Link
 function bbLinkGeneration($mode, $row){
