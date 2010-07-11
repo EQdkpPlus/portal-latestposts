@@ -21,7 +21,7 @@ if ( !defined('EQDKP_INC') ){
 }
 
 // Define the tables & configuration options
-$defprefix      = ($conf_plus['pk_latestposts_dbprefix']) ? $conf_plus['pk_latestposts_dbprefix'] : 'wbb1_1_';
+$defprefix      = ($conf_plus['pk_latestposts_dbprefix']) ? trim($conf_plus['pk_latestposts_dbprefix']) : 'wbb1_1_';
 $table_threads  = $defprefix. "thread";
 $table_posts    = $defprefix. "post";
 
@@ -36,7 +36,7 @@ if(is_array($privateforums)){
   $myBBquery .= " AND t.boardID ".$black_or_white."(". implode(', ', $privateforums).")";
 }
 $myBBquery .= " AND p.time = t.lastPostTime 
-              ORDER BY t.lastPostTime DESC LIMIT ".$topicnumber;
+              ORDER BY t.lastPostTime DESC LIMIT ".trim($topicnumber);
 
 // Link
 function bbLinkGeneration($mode, $row){

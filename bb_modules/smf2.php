@@ -5,15 +5,15 @@
  * Link:		    http://creativecommons.org/licenses/by-nc-sa/3.0/
  * -----------------------------------------------------------------------
  * Began:       2008
- * Date:        $Date$
+ * Date:        $Date: 2010-06-30 18:14:02 +0200 (Mi, 30 Jun 2010) $
  * -----------------------------------------------------------------------
- * @author      $Author$
+ * @author      $Author: wallenium $
  * @copyright   2006-2008 Corgan - Stefan Knaak | Wallenium & the EQdkp-Plus Developer Team
  * @link        http://eqdkp-plus.com
  * @package     eqdkp-plus
- * @version     $Rev$
+ * @version     $Rev: 8264 $
  * 
- * $Id$
+ * $Id: smf.php 8264 2010-06-30 16:14:02Z wallenium $
  */
 
 if ( !defined('EQDKP_INC') ){
@@ -26,14 +26,14 @@ $table_topics   = trim($conf_plus['pk_latestposts_dbprefix']). "topics";
 
 // Build the db query
 $myBBquery  = "SELECT ms.ID_TOPIC as bb_topic_id, ms.subject as bb_topic_title, 
-              ms.ID_MSG as bb_message_id, ms.posterTime as bb_posttime, t.numReplies as bb_replies, 
-              ms.ID_MEMBER as bb_poster_id, ms.posterName as bb_username
+              ms.ID_MSG as bb_message_id, ms.poster_time as bb_posttime, t.num_replies as bb_replies, 
+              ms.ID_MEMBER as bb_poster_id, ms.poster_name as bb_username
               FROM ".$table_messages." ms, ".$table_topics." t
               WHERE ms.ID_MSG = t.ID_LAST_MSG ";
 if(is_array($privateforums)){
   $myBBquery .= " AND t.ID_BOARD ".$black_or_white."(". implode(', ', $privateforums).") ";
 }
-$myBBquery .= "ORDER BY ms.posterTime DESC LIMIT ".trim($topicnumber);
+$myBBquery .= "ORDER BY ms.poster_time DESC LIMIT ".trim($topicnumber);
 
 // Link
 function bbLinkGeneration($mode, $row){
