@@ -1,14 +1,14 @@
 <?php
-/*
+ /*
  * Project:     EQdkp-Plus
  * License:     Creative Commons - Attribution-Noncommercial-Share Alike 3.0 Unported
- * Link:		    http://creativecommons.org/licenses/by-nc-sa/3.0/
+ * Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
  * -----------------------------------------------------------------------
  * Began:       2008
  * Date:        $Date$
  * -----------------------------------------------------------------------
  * @author      $Author$
- * @copyright   2006-2008 Corgan - Stefan Knaak | Wallenium & the EQdkp-Plus Developer Team
+ * @copyright   2006-2010 EQdkp-Plus Developer Team
  * @link        http://eqdkp-plus.com
  * @package     eqdkp-plus
  * @version     $Rev$
@@ -23,12 +23,12 @@ if ( !defined('EQDKP_INC') ){
 $portal_module['latestposts'] = array(
 			'name'			    => 'Latest Forum Posts',
 			'path'			    => 'latestposts',
-			'version'		    => '1.1.0',
-			'author'        => 'WalleniuM',
+			'version'		    => '1.2.0',
+			'author'			=> 'WalleniuM',
 			'contact'		    => 'http://www.eqdkp-plus.com',
-			'description'   => 'See the latest Forum Posts',
-			'positions'     => array('left1', 'left2', 'right', 'middle'),
-      'install'       => array(
+			'description'		=> 'See the latest Forum Posts',
+			'positions'			=> array('left1', 'left2', 'right', 'middle'),
+			'install'			=> array(
 			                            'autoenable'        => '0',
 			                            'defaultposition'   => 'middle',
 			                            'defaultnumber'     => '1',
@@ -153,9 +153,7 @@ if(!function_exists(latestposts_module))
     
   	$myOut = $pdc->get('portal.modul.latestposts',false,true);
   	if (!$myOut) 
-  	{ 
-  			    
-
+  	{
 	    // This Module requires EQDKP PLUS 0.6.2.x
 	    if(EQDKPPLUS_VERSION < '0.6.2.1'){
 	      return $plang['pk_latestposts_plus2old'];

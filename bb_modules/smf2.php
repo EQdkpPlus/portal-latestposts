@@ -1,19 +1,19 @@
 <?php
-/*
+ /*
  * Project:     EQdkp-Plus
  * License:     Creative Commons - Attribution-Noncommercial-Share Alike 3.0 Unported
- * Link:		    http://creativecommons.org/licenses/by-nc-sa/3.0/
+ * Link:		http://creativecommons.org/licenses/by-nc-sa/3.0/
  * -----------------------------------------------------------------------
- * Began:       2008
- * Date:        $Date: 2010-06-30 18:14:02 +0200 (Mi, 30 Jun 2010) $
+ * Began:       2010
+ * Date:        $Date$
  * -----------------------------------------------------------------------
- * @author      $Author: wallenium $
- * @copyright   2006-2008 Corgan - Stefan Knaak | Wallenium & the EQdkp-Plus Developer Team
+ * @author      $Author$
+ * @copyright   2006-2010 EQdkp-Plus Developer Team
  * @link        http://eqdkp-plus.com
  * @package     eqdkp-plus
- * @version     $Rev: 8264 $
+ * @version     $Rev$
  * 
- * $Id: smf.php 8264 2010-06-30 16:14:02Z wallenium $
+ * $Id$
  */
 
 if ( !defined('EQDKP_INC') ){
