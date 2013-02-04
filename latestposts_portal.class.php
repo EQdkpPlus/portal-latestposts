@@ -29,7 +29,7 @@ class latestposts_portal extends portal_generic {
 	protected $path		= 'latestposts';
 	protected $data		= array(
 		'name'			=> 'Latest Forum Posts',
-		'version'		=> '2.0.0',
+		'version'		=> '2.0.1',
 		'author'		=> 'WalleniuM',
 		'contact'		=> EQDKP_PROJECT_URL,
 		'description'	=> 'See the latest Forum Posts',
@@ -243,7 +243,7 @@ class latestposts_portal extends portal_generic {
 	
 	
 	public function output() {
-		$myOut = $this->pdc->get('portal.modul.latestposts.u'.$this->user->id,false,true);
+		$myOut = $this->pdc->get('portal.modul.latestposts.u'.$this->user->id.'.'.$this->root_path,false,true);
 
 		if(!$myOut){
 			// do the link-thing..
@@ -387,7 +387,7 @@ class latestposts_portal extends portal_generic {
 			}
 			
 			if (isset($sucess)) {
-				$this->pdc->put('portal.modul.latestposts.u'.$this->user->id,$myOut,300,false,true);
+				$this->pdc->put('portal.modul.latestposts.u'.$this->user->id.'.'.$this->root_path,$myOut,300,false,true);
 			}
 		}
 		return $myOut;
