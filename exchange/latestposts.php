@@ -89,14 +89,20 @@ if (!class_exists('exchange_latestposts')){
 				
 				$strQuery = $module->getBBQuery($arrForums, $black_or_white, $intNumber);
 				$myOut['forum_url'] = htmlentities($this->config->get('pk_latestposts_url'));
+				
+				$strBoardURL = $this->config->get('pk_latestposts_url');
+				if (substr($this->config->get('pk_latestposts_url'), -1) != "/"){
+					$strBoardURL .= '/';
+				}
+				
 				$myOut['posts'] = array();
 				$sucess = false;
 				if($bb_result = $mydb->query($strQuery)){
 					$sucess = true;
 					while($row = $mydb->fetch_record($bb_result)){
 						$myOut['posts'][] = array(
-							'member_link' => htmlentities($this->config->get('pk_latestposts_url').$module->getBBLink('member', $row)),
-							'topic_link' => htmlentities($this->config->get('pk_latestposts_url').$module->getBBLink('topic', $row)),
+							'member_link' => htmlentities($strBoardURL.$module->getBBLink('member', $row)),
+							'topic_link' => htmlentities($strBoardURL.$module->getBBLink('topic', $row)),
 							'topic_title' => $row['bb_topic_title'],
 							'topic_replies' => intval($row['bb_replies']),
 							'topic_lastpost_date' => $this->time->date('Y-m-d H:i', $row['bb_posttime']),
