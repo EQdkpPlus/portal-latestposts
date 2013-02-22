@@ -29,7 +29,7 @@ class latestposts_portal extends portal_generic {
 	protected $path		= 'latestposts';
 	protected $data		= array(
 		'name'			=> 'Latest Forum Posts',
-		'version'		=> '2.0.2',
+		'version'		=> '2.0.3',
 		'author'		=> 'WalleniuM',
 		'contact'		=> EQDKP_PROJECT_URL,
 		'description'	=> 'See the latest Forum Posts',
@@ -267,6 +267,10 @@ class latestposts_portal extends portal_generic {
 			}else{
 				$mydb = dbal::factory(array('dbtype' => 'mysql', 'die_gracefully' => true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
 				$mydb->open($this->dbhost, $this->dbname, $this->dbuser, $this->dbpass);
+			}
+			
+			if (!$mydb){
+				return $this->user->lang('pk_latestposts_connerror');
 			}
 
 			// Set some Variables we're using in the BB Modules..
