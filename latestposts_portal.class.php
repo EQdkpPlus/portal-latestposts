@@ -29,7 +29,7 @@ class latestposts_portal extends portal_generic {
 	protected $path		= 'latestposts';
 	protected $data		= array(
 		'name'			=> 'Latest Forum Posts',
-		'version'		=> '2.0.3',
+		'version'		=> '2.0.4',
 		'author'		=> 'WalleniuM',
 		'contact'		=> EQDKP_PROJECT_URL,
 		'description'	=> 'See the latest Forum Posts',
@@ -375,7 +375,7 @@ class latestposts_portal extends portal_generic {
 						$myOut .= "<tr valign='top'>
 									<td>
 										<a href='".$topic_link."' target='".$myTarget."'>".$short_title."</a> (".$row['bb_replies'].")<br/>
-										".date('d.m.y, H:i', $row['bb_posttime']).", <a href='".$member_link."' target='".$myTarget."'>".$row['bb_username']."</a>
+										".$this->time->user_date($row['bb_posttime'], true).", <a href='".$member_link."' target='".$myTarget."'>".sanitize($row['bb_username'])."</a>
 									</td>
 								</tr>";
 					}
