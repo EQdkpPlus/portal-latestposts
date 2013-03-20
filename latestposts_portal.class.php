@@ -53,7 +53,7 @@ class latestposts_portal extends portal_generic {
 	public $LoadSettingsOnchangeVisibility = true;
 	
 	
-	public function get_settings(){
+	public function get_settings($state){
 		$settings	= array(
 		'pk_latestposts_bbmodule'	=> array(
 			'name'		=> 'pk_latestposts_bbmodule',
