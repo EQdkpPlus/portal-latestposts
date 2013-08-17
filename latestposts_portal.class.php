@@ -29,7 +29,7 @@ class latestposts_portal extends portal_generic {
 	protected $path		= 'latestposts';
 	protected $data		= array(
 		'name'			=> 'Latest Forum Posts',
-		'version'		=> '2.0.5',
+		'version'		=> '2.0.6',
 		'author'		=> 'WalleniuM',
 		'contact'		=> EQDKP_PROJECT_URL,
 		'description'	=> 'See the latest Forum Posts',
@@ -69,6 +69,7 @@ class latestposts_portal extends portal_generic {
 				'vb3'		=> 'vBulletin 3',
 				'vb4'		=> 'vBulletin 4',
 				'wbb3'		=> 'WBB 3',
+				'wbb4'		=> 'WBB 4',
 				'e107'		=> 'e107',
 				'mybb'		=> 'MyBB',
 			),
