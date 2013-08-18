@@ -22,14 +22,14 @@ if ( !defined('EQDKP_INC') ){
 
 class latestposts_portal extends portal_generic {
 	public static function __shortcuts() {
-		$shortcuts = array('user', 'core', 'time', 'db', 'pdc', 'config', 'bridge', 'crypt'=>'encrypt', 'pdh');
+		$shortcuts = array('user', 'core', 'time', 'db', 'pdc', 'config', 'bridge', 'crypt'=>'encrypt', 'pdh', 'routing');
 		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 
 	protected $path		= 'latestposts';
 	protected $data		= array(
 		'name'			=> 'Latest Forum Posts',
-		'version'		=> '2.0.6',
+		'version'		=> '2.0.5',
 		'author'		=> 'WalleniuM',
 		'contact'		=> EQDKP_PROJECT_URL,
 		'description'	=> 'See the latest Forum Posts',
@@ -256,8 +256,6 @@ class latestposts_portal extends portal_generic {
 				$strBoardURL .= '/';
 			}
 
-			$myWrapper	= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $strBoardURL : $this->root_path.'wrapper.php'.$this->SID.'&id=lp&l='.rawurlencode($strBoardURL);
-
 			// Select the Database to use.. (same, bridged mode, other)
 			if($this->config->get('cmsbridge_active') == 1 && $this->config->get('pk_latestposts_dbmode') == 'bridge'){
 				$mydb		= $this->bridge->db;
@@ -342,8 +340,11 @@ class latestposts_portal extends portal_generic {
 				if($bb_result = $mydb->query($strQuery)){
 					$sucess = true;
 					while($row = $mydb->fetch_record($bb_result)){
-						$member_link	= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $myWrapper.$module->getBBLink('member', $row) : $myWrapper.rawurlencode($module->getBBLink('member', $row));
-						$topic_link		= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $myWrapper.$module->getBBLink('topic', $row) : $myWrapper.rawurlencode($module->getBBLink('topic', $row));
+						$strMemberlinkWrapper = $this->routing->build('external', $row['bb_username'].'-'.$row['bb_user_id'], 'User');
+						$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_topic_id'], 'Topic');
+					
+						$member_link	= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('member', $row) : $strMemberlinkWrapper;
+						$topic_link		= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('topic', $row) : $strTopiclinkWrapper;
 
 						$myOut .= "<tr valign='top'>
 									<td>
@@ -351,7 +352,7 @@ class latestposts_portal extends portal_generic {
 									</td>
 									<td align='center'>".$row['bb_replies']."</td>
 									<td>".$this->time->user_date($row['bb_posttime'], true)."</td>
-									<td><a href='".htmlentities($member_link)."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".htmlentities($topic_link)."' target='".$myTarget."'><img src='".$this->root_path."portal/latestposts/images/icon_topic_latest.png' alt='' /></a></td>
+									<td><a href='".htmlentities($member_link)."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".htmlentities($topic_link)."' target='".$myTarget."'><img src='".$this->server_path."portal/latestposts/images/icon_topic_latest.png' alt='' /></a></td>
 								</tr>";
 					}
 				}else{
@@ -372,8 +373,11 @@ class latestposts_portal extends portal_generic {
 						}else{
 							$short_title = $row['bb_topic_title'];
 						}
-						$member_link	= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $myWrapper.$module->getBBLink('member', $row) : $myWrapper.rawurlencode($module->getBBLink('member', $row));
-						$topic_link		= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $myWrapper.$module->getBBLink('topic', $row) : $myWrapper.rawurlencode($module->getBBLink('topic', $row));
+						$strMemberlinkWrapper = $this->routing->build('external', $row['bb_username'].'-'.$row['bb_user_id'], 'User');
+						$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_topic_id'], 'Topic');
+						
+						$member_link	= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('member', $row) : $strMemberlinkWrapper;
+						$topic_link		= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('topic', $row) : $strTopiclinkWrapper;
 						$myOut .= "<tr valign='top'>
 									<td>
 										<a href='".$topic_link."' target='".$myTarget."'>".$short_title."</a> (".$row['bb_replies'].")<br/>

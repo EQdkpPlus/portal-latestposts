@@ -26,19 +26,63 @@ if (!class_exists('latestposts_wrapper_hook')){
 		
 		
 		public function wrapper_hook($arrParams){
-			if ($arrParams['id'] != 'lp') return false;
+			if ($arrParams['id'] != 'Topic' && $arrParams['id'] != 'User' ) return false;
 			
-			$mywpthing = parse_url($this->config->get('pk_latestposts_url'));
+			// include the BB Module File...
+			$bbModule = $this->root_path . 'portal/latestposts/bb_modules/'.$this->config->get('pk_latestposts_bbmodule').'.php';
+			if(is_file($bbModule)){
+				include_once($bbModule);
+				$classname = 'latestpostsmodule_'.$this->config->get('pk_latestposts_bbmodule');
+				$module = new $classname();
+				
+				if(!$module || !method_exists($module, 'getBBQuery')){
+					return false;
+				}
+
+			} else {
+				return false;
+			}
 			
-			$out = array(
-				'verify'	=> array($mywpthing['host']),
-				'url'		=> $arrParams['link'],
-				'title'		=> $this->user->lang('forum'),
-				'window'	=> (int)$this->config->get('pk_latestposts_linktype'),
-				'height'	=> '4024',
-			);
+			$arrPath = array_filter(explode('-', $arrParams['link']));
+			$arrPath = array_reverse($arrPath);
+			$strBoardURL = $this->config->get('pk_latestposts_url');
 			
-			return array('id'=>'lp', 'data'=> $out);
+			if (substr($this->config->get('pk_latestposts_url'), -1) != "/"){
+				$strBoardURL .= '/';
+			}
+			
+			if($arrParams['id'] == 'Topic'){
+				$row = array(
+					'bb_topic_id' => $arrPath[0]
+				);
+				
+				$strUrl = $strBoardURL.$module->getBBLink('topic', $row);
+				
+				$out = array(
+					'url'		=> $strUrl,
+					'title'		=> $this->user->lang('forum'),
+					'window'	=> (int)$this->config->get('pk_latestposts_linktype'),
+					'height'	=> '4024',
+				);
+				
+				return array('id'=>'Topic', 'data'=> $out);
+			
+			} else {
+				$row = array(
+					'bb_user_id' => $arrPath[0]
+				);
+				
+				$strUrl = $strBoardURL.$module->getBBLink('member', $row);
+				
+				$out = array(
+					'url'		=> $strUrl,
+					'title'		=> $this->user->lang('forum'),
+					'window'	=> (int)$this->config->get('pk_latestposts_linktype'),
+					'height'	=> '4024',
+				);
+				
+				return array('id'=>'User', 'data'=> $out);
+			}
 		}
 	}
 }
