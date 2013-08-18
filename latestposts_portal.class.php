@@ -53,7 +53,7 @@ class latestposts_portal extends portal_generic {
 	public $LoadSettingsOnchangeVisibility = true;
 	
 	
-	public function get_settings(){
+	public function get_settings($state){
 		$settings	= array(
 		'pk_latestposts_bbmodule'	=> array(
 			'name'		=> 'pk_latestposts_bbmodule',
@@ -245,7 +245,7 @@ class latestposts_portal extends portal_generic {
 	
 	
 	public function output() {
-		$myOut = $this->pdc->get('portal.modul.latestposts.u'.$this->user->id.'.'.$this->root_path,false,true);
+		$myOut = $this->pdc->get('portal.modul.latestposts.u'.$this->user->id,false,true);
 
 		if(!$myOut){
 			// do the link-thing..
@@ -330,15 +330,10 @@ class latestposts_portal extends portal_generic {
 			
 			// Middle Output
 			if($this->position == 'middle' || $this->position == 'bottom'){
-				$myOut = "<table cellpadding='3' cellspacing='2' width='100%' class='colorswitch'>
-							<tr>
-								<th width='50%'>".$this->user->lang('pk_latestposts_title')."</th>
-								<th width='10%'>".$this->user->lang('pk_latestposts_posts')."</th>
-								<th width='40%' colspan='2'>".$this->user->lang('pk_latestposts_lastpost')."</th>
-							</tr>";
 				
 				if($bb_result = $mydb->query($strQuery)){
 					$sucess = true;
+					$blnForumName = false;
 					while($row = $mydb->fetch_record($bb_result)){
 						$strMemberlinkWrapper = $this->routing->build('external', $row['bb_username'].'-'.$row['bb_user_id'], 'User');
 						$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_topic_id'], 'Topic');
@@ -348,11 +343,18 @@ class latestposts_portal extends portal_generic {
 
 						$myOut .= "<tr valign='top'>
 									<td>
-											<a href='".htmlentities($topic_link)."' target='".$myTarget."'>".$row['bb_topic_title']."</a>
-									</td>
+										<a href='".htmlentities($topic_link)."' target='".$myTarget."'>".$row['bb_topic_title']."</a>											
+									</td>";
+						if (isset($row['bb_forum_name'])) {
+							$myOut .= "<td>".$row['bb_forum_name']."</td>";
+							$blnForumName = true;
+						}		
+						$myOut .= "</td>
 									<td align='center'>".$row['bb_replies']."</td>
-									<td>".$this->time->user_date($row['bb_posttime'], true)."</td>
-									<td><a href='".htmlentities($member_link)."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".htmlentities($topic_link)."' target='".$myTarget."'><img src='".$this->server_path."portal/latestposts/images/icon_topic_latest.png' alt='' /></a></td>
+									<td><a href='".htmlentities($topic_link)."' target='".$myTarget."'>".$this->time->user_date($row['bb_posttime'], true)."</a>, 
+									<a href='".htmlentities($member_link)."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".htmlentities($topic_link)."' target='".$myTarget."'></a>
+									<a href='".htmlentities($topic_link)."' target='".$myTarget."'><i class=\"icon-chevron-right\"></i></a>
+									</td>
 								</tr>";
 					}
 				}else{
@@ -360,6 +362,16 @@ class latestposts_portal extends portal_generic {
 									<td colspan='3'>".$this->user->lang('pk_latestposts_noentries')."</td>
 								</tr>";
 				}
+				
+				
+				$myOut = "<table cellpadding='3' cellspacing='2' width='100%' class='table colorswitch'>
+							<tr>
+								<th width='50%'>".$this->user->lang('pk_latestposts_title')."</th>
+								".(($blnForumName) ? '<th class="nowrap" width="10%">'.$this->user->lang('pk_latestposts_forum').'</th>' : '')."
+								<th width='10%'>".$this->user->lang('pk_latestposts_posts')."</th>
+								<th width='20%'>".$this->user->lang('pk_latestposts_lastpost')."</th>
+							</tr>".$myOut;
+				
 				$myOut .= "</table>";
 			}else{
 				// Sidebar Output
@@ -397,7 +409,7 @@ class latestposts_portal extends portal_generic {
 			}
 			
 			if (isset($sucess)) {
-				$this->pdc->put('portal.modul.latestposts.u'.$this->user->id.'.'.$this->root_path,$myOut,300,false,true);
+				$this->pdc->put('portal.modul.latestposts.u'.$this->user->id,$myOut,300,false,true);
 			}
 		}
 		return $myOut;

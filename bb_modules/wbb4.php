@@ -26,13 +26,13 @@ class latestpostsmodule_wbb4 {
 			$myBBquery	= "SELECT t.threadID as bb_topic_id, t.topic as bb_topic_title, 
 							p.postID as bb_last_post, t.lastPostTime as bb_posttime, 
 							t.replies as bb_replies, t.lastPosterID as bb_user_id, 
-							t.lastPoster as bb_username
-							FROM __thread t, __post p
+							t.lastPoster as bb_username, b.title as bb_forum_name
+							FROM __thread t, __post p, __board b
 							WHERE t.threadID = p.threadid";
 			if(is_array($arrPrivateforums) && !empty($arrPrivateforums)){
 				$myBBquery .= " AND t.boardID ".$black_or_white."(". implode(', ', $arrPrivateforums).")";
 			}
-			$myBBquery	.= " AND p.time = t.lastPostTime 
+			$myBBquery	.= " AND p.time = t.lastPostTime AND b.boardID = t.boardID 
 							ORDER BY t.lastPostTime DESC LIMIT ".trim($topicnumber);
 						
 		return $myBBquery;
