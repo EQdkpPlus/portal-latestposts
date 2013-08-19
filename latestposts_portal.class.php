@@ -37,9 +37,6 @@ class latestposts_portal extends portal_generic {
 	protected $positions = array('middle', 'left1', 'left2', 'right', 'bottom');
 	
 	protected $install	= array(
-		'autoenable'		=> '0',
-		'defaultposition'	=> 'middle',
-		'defaultnumber'		=> '5',
 	);
 	
 	protected $exchangeModules = array(
@@ -328,8 +325,8 @@ class latestposts_portal extends portal_generic {
 			
 			$strQuery = $module->getBBQuery($arrForums, $black_or_white, $topicnumber);
 			
-			// Middle Output
-			if($this->position == 'middle' || $this->position == 'bottom'){
+			// Wide Content
+			if($this->wide_content){
 				
 				if($bb_result = $mydb->query($strQuery)){
 					$sucess = true;
@@ -419,7 +416,4 @@ class latestposts_portal extends portal_generic {
 		$this->pdc->del_prefix('portal.modul.latestposts');
 	}
 }
-
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('short_latestposts_portal', latestposts_portal::__shortcuts());
-
 ?>
