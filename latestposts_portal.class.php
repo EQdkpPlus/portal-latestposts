@@ -185,15 +185,25 @@ class latestposts_portal extends portal_generic {
 		
 		//Try a database connection
 		if($this->config->get('cmsbridge_active') == 1 && $this->config->get('pk_latestposts_dbmode') == 'bridge'){
+			//Bridge Connection
 			$mydb		= $this->bridge->db;
 			//change prefix
-			if (strlen(trim($this->config->get('pk_latestposts_dbprefix')))) $mydb->set_prefix(trim($this->config->get('pk_latestposts_dbprefix')));
-		}elseif($this->config->get('pk_latestposts_dbmode') == 'new'){
-			$mydb = dbal::factory(array('dbtype' => 'mysql', 'die_gracefully' => true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
-			$mydb->open($this->crypt->decrypt($this->config->get('pk_latestposts_dbhost')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbname')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbuser')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbpassword')));
+			if (strlen(trim($this->config->get('pk_latestposts_dbprefix')))) $mydb->setPrefix(trim($this->config->get('pk_latestposts_dbprefix')));
+		} elseif($this->config->get('pk_latestposts_dbmode') == 'new'){
+			//Another Database
+			try {
+				$mydb = idbal::factory(array('dbtype' => 'mysqli', 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
+				$mydb->connect($this->crypt->decrypt($this->config->get('pk_latestposts_dbhost')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbname')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbuser')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbpassword')));
+			} catch(iDBALException $e){
+				$mydb = false;
+			}
 		}else{
-			$mydb = dbal::factory(array('dbtype' => 'mysql', 'die_gracefully' => true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
-			$mydb->open($this->dbhost, $this->dbname, $this->dbuser, $this->dbpass);
+			//Same Database
+			try {
+				$mydb = idbal::factory(array('dbtype' => 'mysqli', 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));			
+			} catch(iDBALException $e){
+				$mydb = false;
+			}
 		}
 		
 		if ($mydb){
@@ -204,17 +214,19 @@ class latestposts_portal extends portal_generic {
 				$module = new $classname();
 				
 				if ($module && method_exists($module, 'getBBForumQuery')){
-					if($bb_result = $mydb->query($module->getBBForumQuery())){
+					$objQuery = $mydb->query($module->getBBForumQuery());
+					if ($objQuery){
 						$arrOptions = array();
-						while($row = $mydb->fetch_record($bb_result)){
+						while($row = $objQuery->fetchAssoc()){
 							$arrOptions[intval($row['id'])] = $row['name'];
-						}	
+						}
 					}				
 				}
 			}
 			//reset prefix
-			$mydb->reset_prefix();
+			if ($this->config->get('pk_latestposts_dbmode') == 'bridge') $mydb->resetPrefix();
 		}
+		
 		if (is_array($this->pdh->get('portal', 'visibility', array($this->id)))){
 			foreach ($this->pdh->get('portal', 'visibility', array($this->id)) as $key => $value){
 				if (isset($arrOptions)){
@@ -253,17 +265,27 @@ class latestposts_portal extends portal_generic {
 				$strBoardURL .= '/';
 			}
 
-			// Select the Database to use.. (same, bridged mode, other)
+			//Try a database connection
 			if($this->config->get('cmsbridge_active') == 1 && $this->config->get('pk_latestposts_dbmode') == 'bridge'){
+				//Bridge Connection
 				$mydb		= $this->bridge->db;
 				//change prefix
-				if (strlen(trim($this->config->get('pk_latestposts_dbprefix')))) $mydb->set_prefix(trim($this->config->get('pk_latestposts_dbprefix')));
-			}elseif($this->config->get('pk_latestposts_dbmode') == 'new'){
-				$mydb = dbal::factory(array('dbtype' => 'mysql', 'die_gracefully' => true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
-				$mydb->open($this->crypt->decrypt($this->config->get('pk_latestposts_dbhost')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbname')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbuser')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbpassword')));
+				if (strlen(trim($this->config->get('pk_latestposts_dbprefix')))) $mydb->setPrefix(trim($this->config->get('pk_latestposts_dbprefix')));
+			} elseif($this->config->get('pk_latestposts_dbmode') == 'new'){
+				//Another Database
+				try {
+					$mydb = idbal::factory(array('dbtype' => 'mysqli', 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
+					$mydb->connect($this->crypt->decrypt($this->config->get('pk_latestposts_dbhost')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbname')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbuser')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbpassword')));
+				} catch(iDBALException $e){
+					$mydb = false;
+				}
 			}else{
-				$mydb = dbal::factory(array('dbtype' => 'mysql', 'die_gracefully' => true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
-				$mydb->open($this->dbhost, $this->dbname, $this->dbuser, $this->dbpass);
+				//Same Database
+				try {
+					$mydb = idbal::factory(array('dbtype' => 'mysqli', 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));			
+				} catch(iDBALException $e){
+					$mydb = false;
+				}
 			}
 			
 			if (!$mydb){
@@ -327,41 +349,44 @@ class latestposts_portal extends portal_generic {
 			
 			// Wide Content
 			if($this->wide_content){
-				
-				if($bb_result = $mydb->query($strQuery)){
+				$objQuery = $mydb->query($strQuery);
+				if ($objQuery){
 					$sucess = true;
 					$blnForumName = false;
-					while($row = $mydb->fetch_record($bb_result)){
-						$strMemberlinkWrapper = $this->routing->build('external', $row['bb_username'].'-'.$row['bb_user_id'], 'User');
-						$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_topic_id'], 'Topic');
 					
-						$member_link	= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('member', $row) : $strMemberlinkWrapper;
-						$topic_link		= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('topic', $row) : $strTopiclinkWrapper;
-
+					$arrResult = $objQuery->fetchAllAssoc();
+					if (count($arrResult)){
+						foreach($arrResult as $row){
+							$strMemberlinkWrapper = $this->routing->build('external', $row['bb_username'].'-'.$row['bb_user_id'], 'User');
+							$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_topic_id'], 'Topic');
+						
+							$member_link	= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('member', $row) : $strMemberlinkWrapper;
+							$topic_link		= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('topic', $row) : $strTopiclinkWrapper;
+	
+							$myOut .= "<tr valign='top'>
+										<td>
+											<a href='".htmlentities($topic_link)."' target='".$myTarget."'>".$row['bb_topic_title']."</a>											
+										</td>";
+							if (isset($row['bb_forum_name'])) {
+								$myOut .= "<td>".$row['bb_forum_name']."</td>";
+								$blnForumName = true;
+							}		
+							$myOut .= "</td>
+										<td align='center'>".$row['bb_replies']."</td>
+										<td><a href='".htmlentities($topic_link)."' target='".$myTarget."'>".$this->time->user_date($row['bb_posttime'], true)."</a>, 
+										<a href='".htmlentities($member_link)."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".htmlentities($topic_link)."' target='".$myTarget."'></a>
+										<a href='".htmlentities($topic_link)."' target='".$myTarget."'><i class=\"icon-chevron-right\"></i></a>
+										</td>
+									</tr>";		
+						}
+						
+					} else {
 						$myOut .= "<tr valign='top'>
-									<td>
-										<a href='".htmlentities($topic_link)."' target='".$myTarget."'>".$row['bb_topic_title']."</a>											
-									</td>";
-						if (isset($row['bb_forum_name'])) {
-							$myOut .= "<td>".$row['bb_forum_name']."</td>";
-							$blnForumName = true;
-						}		
-						$myOut .= "</td>
-									<td align='center'>".$row['bb_replies']."</td>
-									<td><a href='".htmlentities($topic_link)."' target='".$myTarget."'>".$this->time->user_date($row['bb_posttime'], true)."</a>, 
-									<a href='".htmlentities($member_link)."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".htmlentities($topic_link)."' target='".$myTarget."'></a>
-									<a href='".htmlentities($topic_link)."' target='".$myTarget."'><i class=\"icon-chevron-right\"></i></a>
-									</td>
-								</tr>";
-					}
-				}else{
-					$myOut .= "<tr valign='top'>
 									<td colspan='3'>".$this->user->lang('pk_latestposts_noentries')."</td>
 								</tr>";
-				}
-				
-				
-				$myOut = "<table cellpadding='3' cellspacing='2' width='100%' class='table colorswitch'>
+					}					
+					
+					$myOut = "<table cellpadding='3' cellspacing='2' width='100%' class='table colorswitch'>
 							<tr>
 								<th width='50%'>".$this->user->lang('pk_latestposts_title')."</th>
 								".(($blnForumName) ? '<th class="nowrap" width="10%">'.$this->user->lang('pk_latestposts_forum').'</th>' : '')."
@@ -369,40 +394,52 @@ class latestposts_portal extends portal_generic {
 								<th width='20%'>".$this->user->lang('pk_latestposts_lastpost')."</th>
 							</tr>".$myOut;
 				
-				$myOut .= "</table>";
-			}else{
+					$myOut .= "</table>";
+				} else {
+					$myOut = "An error occured.";
+				}					
+			} else {
 				// Sidebar Output
 				$myOut = "<table cellpadding='3' cellspacing='2' width='100%' class='colorswitch'>";
-				if($bb_result = $mydb->query($strQuery)){
-					$sucess = true;
-					$myTitleLength = ($this->config->get('pk_latestposts_trimtitle')) ? $this->config->get('pk_latestposts_trimtitle') : 40;
-					while($row = $mydb->fetch_record($bb_result)){
-						if (strlen($row['bb_topic_title']) > $myTitleLength){
-							$short_title = substr($row['bb_topic_title'], 0, $myTitleLength)."...";
-						}else{
-							$short_title = $row['bb_topic_title'];
-						}
-						$strMemberlinkWrapper = $this->routing->build('external', $row['bb_username'].'-'.$row['bb_user_id'], 'User');
-						$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_topic_id'], 'Topic');
+				
+				$objQuery = $mydb->query($strQuery);
+				if($objQuery){
+					$arrResult = $objQuery->fetchAllAssoc();
+					if (count($arrResult)){
+						$sucess = true;
+						$myTitleLength = ($this->config->get('pk_latestposts_trimtitle')) ? $this->config->get('pk_latestposts_trimtitle') : 40;
 						
-						$member_link	= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('member', $row) : $strMemberlinkWrapper;
-						$topic_link		= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('topic', $row) : $strTopiclinkWrapper;
-						$myOut .= "<tr valign='top'>
+						foreach($arrResult as $row){
+							if (strlen($row['bb_topic_title']) > $myTitleLength){
+								$short_title = substr($row['bb_topic_title'], 0, $myTitleLength)."...";
+							}else{
+								$short_title = $row['bb_topic_title'];
+							}
+							$strMemberlinkWrapper = $this->routing->build('external', $row['bb_username'].'-'.$row['bb_user_id'], 'User');
+							$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_topic_id'], 'Topic');
+							
+							$member_link	= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('member', $row) : $strMemberlinkWrapper;
+							$topic_link		= (in_array($this->config->get('pk_latestposts_linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('topic', $row) : $strTopiclinkWrapper;
+							$myOut .= "<tr valign='top'>
 									<td>
 										<a href='".$topic_link."' target='".$myTarget."'>".$short_title."</a> (".$row['bb_replies'].")<br/>
 										".$this->time->user_date($row['bb_posttime'], true).", <a href='".$member_link."' target='".$myTarget."'>".sanitize($row['bb_username'])."</a>
 									</td>
 								</tr>";
+						}
+						$myOut .= "</table>";
+						$sucess = true;
+						
+					} else {
+						$myOut = $this->user->lang('pk_latestposts_noentries');					
 					}
+					
 				}
-				$myOut .= "</table>";
-				$sucess = true;
 			}
-			$mydb->free_result($bb_result);
-			if($this->config->get('pk_latestposts_dbmode') == 'new'){ $mydb->close(); }
+			
 			if($this->config->get('pk_latestposts_dbmode') == 'bridge'){
 				//reset prefix
-				$mydb->reset_prefix();
+				$mydb->resetPrefix();
 			}
 			
 			if (isset($sucess)) {
