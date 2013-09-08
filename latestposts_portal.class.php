@@ -22,7 +22,7 @@ if ( !defined('EQDKP_INC') ){
 
 class latestposts_portal extends portal_generic {
 	public static function __shortcuts() {
-		$shortcuts = array('user', 'core', 'time', 'db', 'pdc', 'config', 'bridge', 'crypt'=>'encrypt', 'pdh', 'routing');
+		$shortcuts = array('user', 'core', 'time', 'db', 'pdc', 'config', 'bridge', 'crypt'=>'encrypt', 'pdh', 'routing', 'db2');
 		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 
