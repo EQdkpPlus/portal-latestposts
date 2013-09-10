@@ -22,7 +22,7 @@ if ( !defined('EQDKP_INC') ){
 
 class latestposts_portal extends portal_generic {
 	public static function __shortcuts() {
-		$shortcuts = array('user', 'core', 'time', 'db', 'pdc', 'config', 'bridge', 'crypt'=>'encrypt', 'pdh', 'routing', 'db2');
+		$shortcuts = array('user', 'core', 'time', 'db', 'pdc', 'config', 'bridge', 'crypt'=>'encrypt', 'pdh', 'routing', 'db');
 		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 
@@ -192,16 +192,16 @@ class latestposts_portal extends portal_generic {
 		} elseif($this->config->get('pk_latestposts_dbmode') == 'new'){
 			//Another Database
 			try {
-				$mydb = idbal::factory(array('dbtype' => 'mysqli', 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
+				$mydb = dbal::factory(array('dbtype' => 'mysqli', 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
 				$mydb->connect($this->crypt->decrypt($this->config->get('pk_latestposts_dbhost')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbname')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbuser')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbpassword')));
-			} catch(iDBALException $e){
+			} catch(DBALException $e){
 				$mydb = false;
 			}
 		}else{
 			//Same Database
 			try {
-				$mydb = idbal::factory(array('dbtype' => 'mysqli', 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));			
-			} catch(iDBALException $e){
+				$mydb = dbal::factory(array('dbtype' => 'mysqli', 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));			
+			} catch(DBALException $e){
 				$mydb = false;
 			}
 		}
@@ -274,16 +274,16 @@ class latestposts_portal extends portal_generic {
 			} elseif($this->config->get('pk_latestposts_dbmode') == 'new'){
 				//Another Database
 				try {
-					$mydb = idbal::factory(array('dbtype' => 'mysqli', 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
+					$mydb = dbal::factory(array('dbtype' => 'mysqli', 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
 					$mydb->connect($this->crypt->decrypt($this->config->get('pk_latestposts_dbhost')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbname')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbuser')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbpassword')));
-				} catch(iDBALException $e){
+				} catch(DBALException $e){
 					$mydb = false;
 				}
 			}else{
 				//Same Database
 				try {
-					$mydb = idbal::factory(array('dbtype' => 'mysqli', 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));			
-				} catch(iDBALException $e){
+					$mydb = dbal::factory(array('dbtype' => 'mysqli', 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));			
+				} catch(DBALException $e){
 					$mydb = false;
 				}
 			}

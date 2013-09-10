@@ -22,7 +22,7 @@ if (!defined('EQDKP_INC')){
 
 if (!class_exists('exchange_latestposts')){
 	class exchange_latestposts extends gen_class{
-		public static $shortcuts = array('pex'=>'plus_exchange', 'user', 'core', 'time', 'db2', 'pdc', 'config', 'bridge', 'crypt'=>'encrypt', 'pdh');
+		public static $shortcuts = array('pex'=>'plus_exchange', 'user', 'core', 'time', 'db', 'pdc', 'config', 'bridge', 'crypt'=>'encrypt', 'pdh');
 		public $options		= array();
 
 		public function get_latestposts($params, $body){
@@ -40,16 +40,16 @@ if (!class_exists('exchange_latestposts')){
 				} elseif($this->config->get('pk_latestposts_dbmode') == 'new'){
 					//Another Database
 					try {
-						$mydb = idbal::factory(array('dbtype' => 'mysqli', 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
+						$mydb = dbal::factory(array('dbtype' => 'mysqli', 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
 						$mydb->connect($this->crypt->decrypt($this->config->get('pk_latestposts_dbhost')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbname')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbuser')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbpassword')));
-					} catch(iDBALException $e){
+					} catch(DBALException $e){
 						$mydb = false;
 					}
 				}else{
 					//Same Database
 					try {
-						$mydb = idbal::factory(array('dbtype' => 'mysqli', 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
-					} catch(iDBALException $e){
+						$mydb = dbal::factory(array('dbtype' => 'mysqli', 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
+					} catch(DBALException $e){
 						$mydb = false;
 					}
 				}	
