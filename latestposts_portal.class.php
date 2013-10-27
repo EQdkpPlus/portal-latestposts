@@ -375,7 +375,7 @@ class latestposts_portal extends portal_generic {
 										<td align='center'>".$row['bb_replies']."</td>
 										<td><a href='".htmlentities($topic_link)."' target='".$myTarget."'>".$this->time->user_date($row['bb_posttime'], true)."</a>, 
 										<a href='".htmlentities($member_link)."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".htmlentities($topic_link)."' target='".$myTarget."'></a>
-										<a href='".htmlentities($topic_link)."' target='".$myTarget."'><i class=\"icon-chevron-right\"></i></a>
+										<a href='".htmlentities($topic_link)."' target='".$myTarget."'><i class=\"fa fa-chevron-right\"></i></a>
 										</td>
 									</tr>";		
 						}
