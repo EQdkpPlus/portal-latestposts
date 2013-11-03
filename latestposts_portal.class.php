@@ -31,6 +31,7 @@ class latestposts_portal extends portal_generic {
 		'name'			=> 'Latest Forum Posts',
 		'version'		=> '2.0.5',
 		'author'		=> 'WalleniuM',
+		'icon'			=> 'fa-group',
 		'contact'		=> EQDKP_PROJECT_URL,
 		'description'	=> 'See the latest Forum Posts',
 	);
