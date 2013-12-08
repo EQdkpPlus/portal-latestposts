@@ -21,18 +21,21 @@ if (!defined('EQDKP_INC')){
 }
 
 if (!class_exists('latestposts_wrapper_hook')){
-	class latestposts_wrapper_hook extends gen_class{
-		public static $shortcuts = array('user', 'config');
-		
+	class latestposts_wrapper_hook extends gen_class {
+		private $module_id = 0;
+
+		public __construct($module_id) {
+			$this->module_id = $module_id;
+		}
 		
 		public function wrapper_hook($arrParams){
 			if ($arrParams['id'] != 'Topic' && $arrParams['id'] != 'User' ) return false;
 			
 			// include the BB Module File...
-			$bbModule = $this->root_path . 'portal/latestposts/bb_modules/'.$this->config->get('pk_latestposts_bbmodule').'.php';
+			$bbModule = $this->root_path . 'portal/latestposts/bb_modules/'.$this->config->get('bbmodule', 'pmod_'.$this->module_id).'.php';
 			if(is_file($bbModule)){
 				include_once($bbModule);
-				$classname = 'latestpostsmodule_'.$this->config->get('pk_latestposts_bbmodule');
+				$classname = 'latestpostsmodule_'.$this->config->get('bbmodule', 'pmod_'.$this->module_id);
 				$module = new $classname();
 				
 				if(!$module || !method_exists($module, 'getBBQuery')){
@@ -45,9 +48,9 @@ if (!class_exists('latestposts_wrapper_hook')){
 			
 			$arrPath = array_filter(explode('-', $arrParams['link']));
 			$arrPath = array_reverse($arrPath);
-			$strBoardURL = $this->config->get('pk_latestposts_url');
+			$strBoardURL = $this->config->get('url', 'pmod_'.$this->module_id);
 			
-			if (substr($this->config->get('pk_latestposts_url'), -1) != "/"){
+			if (substr($this->config->get('url', 'pmod_'.$this->module_id), -1) != "/"){
 				$strBoardURL .= '/';
 			}
 			
@@ -61,7 +64,7 @@ if (!class_exists('latestposts_wrapper_hook')){
 				$out = array(
 					'url'		=> $strUrl,
 					'title'		=> $this->user->lang('forum'),
-					'window'	=> (int)$this->config->get('pk_latestposts_linktype'),
+					'window'	=> (int)$this->config->get('linktype', 'pmod_'.$this->module_id),
 					'height'	=> '4024',
 				);
 				
@@ -77,7 +80,7 @@ if (!class_exists('latestposts_wrapper_hook')){
 				$out = array(
 					'url'		=> $strUrl,
 					'title'		=> $this->user->lang('forum'),
-					'window'	=> (int)$this->config->get('pk_latestposts_linktype'),
+					'window'	=> (int)$this->config->get('linktype', 'pmod_'.$this->module_id),
 					'height'	=> '4024',
 				);
 				
@@ -85,8 +88,4 @@ if (!class_exists('latestposts_wrapper_hook')){
 			}
 		}
 	}
-}
-
-if(version_compare(PHP_VERSION, '5.3.0', '<')) {
-	registry::add_const('short_latestposts_wrapper_hook', latestposts_wrapper_hook::$shortcuts);
 }

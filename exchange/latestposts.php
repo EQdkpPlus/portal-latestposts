@@ -22,33 +22,48 @@ if (!defined('EQDKP_INC')){
 
 if (!class_exists('exchange_latestposts')){
 	class exchange_latestposts extends gen_class{
-		public static $shortcuts = array('pex'=>'plus_exchange', 'user', 'core', 'time', 'db', 'pdc', 'config', 'bridge', 'crypt'=>'encrypt', 'pdh');
+		public static $shortcuts = array('pex'=>'plus_exchange', 'crypt'=>'encrypt');
 		public $options		= array();
+		
+		private $module_id = 0;
+		
+		public function __construct($module_id) {
+			$this->module_id = $module_id;
+		}
 
 		public function get_latestposts($params, $body){
 			$intNumber = (intval($params['get']['number']) > 0) ?  intval($params['get']['number']) : 10;
 		
-			$myOut = $this->pdc->get('portal.modul.latestposts.exchange.'.$intNumber.'.u'.$this->user->id,false,true);
+			$myOut = $this->pdc->get('portal.module.latestposts.exchange.'.$intNumber.'.u'.$this->user->id,false,true);
 				if(!$myOut){
 					
 				//Try a database connection
-				if($this->config->get('cmsbridge_active') == 1 && $this->config->get('pk_latestposts_dbmode') == 'bridge'){
+				if($this->config->get('cmsbridge_active') == 1 && $this->config->get('dbmode', 'pmod_'.$this->module_id) == 'bridge'){
 					//Bridge Connection
 					$mydb		= $this->bridge->db;
 					//change prefix
-					if (strlen(trim($this->config->get('pk_latestposts_dbprefix')))) $mydb->setPrefix(trim($this->config->get('pk_latestposts_dbprefix')));
-				} elseif($this->config->get('pk_latestposts_dbmode') == 'new'){
+					if (strlen(trim($this->config->get('dbprefix', 'pmod_'.$this->module_id)))) $mydb->setPrefix(trim($this->config->get('dbprefix', 'pmod_'.$this->module_id)));
+				} elseif($this->config->get('dbmode', 'pmod_'.$this->module_id) == 'new'){
 					//Another Database
 					try {
-						$mydb = dbal::factory(array('dbtype' => 'mysqli', 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
-						$mydb->connect($this->crypt->decrypt($this->config->get('pk_latestposts_dbhost')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbname')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbuser')), $this->crypt->decrypt($this->config->get('pk_latestposts_dbpassword')));
+						$mydb = dbal::factory(array(
+							'dbtype' => 'mysqli',
+							'debug_prefix' => 'latestposts_',
+							'table_prefix' => trim($this->config->get('dbprefix', 'pmod_'.$this->module_id))
+						));
+						$mydb->connect($this->crypt->decrypt(
+							$this->config->get('dbhost', 'pmod_'.$this->module_id)),
+							$this->crypt->decrypt($this->config->get('dbname', 'pmod_'.$this->module_id)),
+							$this->crypt->decrypt($this->config->get('dbuser', 'pmod_'.$this->module_id)),
+							$this->crypt->decrypt($this->config->get('dbpassword', 'pmod_'.$this->module_id))
+						);
 					} catch(DBALException $e){
 						$mydb = false;
 					}
 				}else{
 					//Same Database
 					try {
-						$mydb = dbal::factory(array('dbtype' => 'mysqli', 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('pk_latestposts_dbprefix'))));
+						$mydb = dbal::factory(array('dbtype' => 'mysqli', 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('dbprefix', 'pmod_'.$this->module_id))));
 					} catch(DBALException $e){
 						$mydb = false;
 					}
@@ -56,13 +71,13 @@ if (!class_exists('exchange_latestposts')){
 
 				
 				if ($mydb){
-					$black_or_white	= ($this->config->get('pk_latestposts_blackwhitelist') == 'white') ? 'IN' : 'NOT IN';
+					$black_or_white	= ($this->config->get('blackwhitelist', 'pmod_'.$this->module_id) == 'white') ? 'IN' : 'NOT IN';
 					
 					// include the BB Module File...
-					$bbModule = $this->root_path . 'portal/latestposts/bb_modules/'.$this->config->get('pk_latestposts_bbmodule').'.php';
+					$bbModule = $this->root_path . 'portal/latestposts/bb_modules/'.$this->config->get('bbmodule', 'pmod_'.$this->module_id).'.php';
 					if(is_file($bbModule)){
 						include_once($bbModule);
-						$classname = 'latestpostsmodule_'.$this->config->get('pk_latestposts_bbmodule');
+						$classname = 'latestpostsmodule_'.$this->config->get('bbmodule', 'pmod_'.$this->module_id);
 						$module = new $classname();
 							
 						if(!$module || !method_exists($module, 'getBBQuery')){
@@ -78,7 +93,7 @@ if (!class_exists('exchange_latestposts')){
 					array_push($arrUserMemberships, 0);
 					$arrForums = array();
 					foreach ($arrUserMemberships as $groupid){
-						$strForums = $this->config->get('pk_latestposts_privateforums_'.$groupid);
+						$strForums = $this->config->get('privateforums_'.$groupid, 'pmod_'.$this->module_id);
 						if (method_exists($module, 'getBBForumQuery')){
 							//serialized IDs
 							$arrTmpForums = @unserialize($strForums);
@@ -89,7 +104,7 @@ if (!class_exists('exchange_latestposts')){
 							}
 						} else {
 							//comma seperated IDs
-							$arrTmpForums = ($this->config->get('pk_latestposts_privateforums')) ? explode(",", $this->config->get('pk_latestposts_privateforums')) : '';
+							$arrTmpForums = ($this->config->get('privateforums', 'pmod_'.$this->module_id)) ? explode(",", $this->config->get('privateforums', 'pmod_'.$this->module_id)) : '';
 							if(is_array($arrTmpForums)){
 								foreach($arrTmpForums as $forumid){
 									if(trim($forumid) != ''){
@@ -101,10 +116,10 @@ if (!class_exists('exchange_latestposts')){
 					}
 					
 					$strQuery = $module->getBBQuery($arrForums, $black_or_white, $intNumber);
-					$myOut['forum_url'] = htmlentities($this->config->get('pk_latestposts_url'));
+					$myOut['forum_url'] = htmlentities($this->config->get('url', 'pmod_'.$this->module_id));
 					
-					$strBoardURL = $this->config->get('pk_latestposts_url');
-					if (substr($this->config->get('pk_latestposts_url'), -1) != "/"){
+					$strBoardURL = $this->config->get('url', 'pmod_'.$this->module_id);
+					if (substr($strBoardURL, -1) != "/"){
 						$strBoardURL .= '/';
 					}
 					
@@ -131,7 +146,7 @@ if (!class_exists('exchange_latestposts')){
 					}
 					
 					if ($sucess) {
-						$this->pdc->put('portal.modul.latestposts.exchange.'.$intNumber.'.u'.$this->user->id,$myOut,300,false,true);
+						$this->pdc->put('portal.module.latestposts.exchange.'.$intNumber.'.u'.$this->user->id,$myOut,300,false,true);
 					}
 					
 					
