@@ -178,16 +178,17 @@ class latestposts_portal extends portal_generic {
 		$visibility = $this->config('visibility');
 		if (is_array($visibility)) {
 			foreach ($visibility as $key => $value){
+				$dir_lang = $this->user->lang('latestposts_f_privateforums').(((int)$value == 0) ? $this->user->lang('cl_all') : $this->pdh->get('user_groups', 'name', array($value)));
 				if (isset($arrOptions)){
 					$settings['privateforums_'.$value]	= array(
-						'dir_lang'	=> $this->user->lang('latestposts_f_privateforums').((int)$value == 0) ? $this->user->lang('cl_all') : $this->pdh->get('user_groups', 'name', array($value)),
+						'dir_lang'	=> $dir_lang,
 						'type'		=> 'jq_multiselect',
 						'help'		=> 'latestposts_f_help_privateforums2',
 						'options'	=> $arrOptions,
 					);
 				} else {
 					$settings['privateforums_'.$value]	= array(
-						'dir_lang'	=> $this->user->lang('latestposts_f_privateforums').((int)$value == 0) ? $this->user->lang('cl_all') : $this->pdh->get('user_groups', 'name', array($value)),
+						'dir_lang'	=> $dir_lang,
 						'type'		=> 'text',
 						'size'		=> '30',
 						'help'		=> 'latestposts_f_help_privateforums',
