@@ -347,11 +347,10 @@ class latestposts_portal extends portal_generic {
 					$myOut = "An error occured.";
 				}					
 			} else {
-				// Sidebar Output
-				$myOut = "<table cellpadding='3' cellspacing='2' width='100%' class='colorswitch'>";
-				
+				// Sidebar Output				
 				$objQuery = $mydb->query($strQuery);
 				if($objQuery){
+					$myOut = "<table cellpadding='3' cellspacing='2' width='100%' class='colorswitch'>";
 					$arrResult = $objQuery->fetchAllAssoc();
 					if (count($arrResult)){
 						$sucess = true;
