@@ -294,7 +294,7 @@ class latestposts_portal extends portal_generic {
 			if (count($arrForums) == 0 && $black_or_white == 'IN') return $this->user->lang('portal_latestposts_noselectedboards');
 			
 			$strQuery = $module->getBBQuery($arrForums, $black_or_white, $topicnumber);
-			
+
 			// Wide Content
 			if($this->wide_content){
 				$objQuery = $mydb->query($strQuery);
@@ -344,7 +344,7 @@ class latestposts_portal extends portal_generic {
 				
 					$myOut .= "</table>";
 				} else {
-					$myOut = "An error occured.";
+					$myOut = "An error occured. Please check your settings.";
 				}					
 			} else {
 				// Sidebar Output				
