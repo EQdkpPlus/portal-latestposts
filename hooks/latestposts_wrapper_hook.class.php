@@ -24,12 +24,12 @@ if (!class_exists('latestposts_wrapper_hook')){
 	class latestposts_wrapper_hook extends gen_class {
 		private $module_id = 0;
 
-		public __construct($module_id) {
+		public function __construct($module_id) {			
 			$this->module_id = $module_id;
 		}
 		
-		public function wrapper_hook($arrParams){
-			if ($arrParams['id'] != 'Topic' && $arrParams['id'] != 'User' ) return false;
+		public function wrapper_hook($arrParams){			
+			if ($arrParams['id'] != 'topic' && $arrParams['id'] != 'user' ) return false;
 			
 			// include the BB Module File...
 			$bbModule = $this->root_path . 'portal/latestposts/bb_modules/'.$this->config->get('bbmodule', 'pmod_'.$this->module_id).'.php';
@@ -54,9 +54,10 @@ if (!class_exists('latestposts_wrapper_hook')){
 				$strBoardURL .= '/';
 			}
 			
-			if($arrParams['id'] == 'Topic'){
+			if($arrParams['id'] == 'topic'){
 				$row = array(
-					'bb_topic_id' => $arrPath[0]
+					'bb_topic_id' => $arrPath[0],
+					'bb_post_id'	=> $arrPath[1],
 				);
 				
 				$strUrl = $strBoardURL.$module->getBBLink('topic', $row);
@@ -68,7 +69,7 @@ if (!class_exists('latestposts_wrapper_hook')){
 					'height'	=> '4024',
 				);
 				
-				return array('id'=>'Topic', 'data'=> $out);
+				return array('id'=>'topic', 'data'=> $out);
 			
 			} else {
 				$row = array(
@@ -84,7 +85,7 @@ if (!class_exists('latestposts_wrapper_hook')){
 					'height'	=> '4024',
 				);
 				
-				return array('id'=>'User', 'data'=> $out);
+				return array('id'=>'user', 'data'=> $out);
 			}
 		}
 	}

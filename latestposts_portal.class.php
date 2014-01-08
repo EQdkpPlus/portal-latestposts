@@ -95,6 +95,7 @@ class latestposts_portal extends portal_generic {
 				'size'		=> '30',
 				'encrypt'	=> true,
 				'class'		=> 'js_reload',
+				'set_value' => true,
 			),
 			'url'	=> array(
 				'type'		=> 'text',
@@ -131,7 +132,7 @@ class latestposts_portal extends portal_generic {
 		}
 		
 		//Try a database connection
-		if($this->config('cmsbridge_active') == 1 && $this->config('dbmode') == 'bridge'){
+		if((int)$this->config->get('cmsbridge_active') == 1 && $this->config('dbmode') == 'bridge'){
 			//Bridge Connection
 			$mydb		= $this->bridge->db;
 			//change prefix
@@ -182,7 +183,7 @@ class latestposts_portal extends portal_generic {
 				if (isset($arrOptions)){
 					$settings['privateforums_'.$value]	= array(
 						'dir_lang'	=> $dir_lang,
-						'type'		=> 'jq_multiselect',
+						'type'		=> 'multiselect',
 						'help'		=> 'latestposts_f_help_privateforums2',
 						'options'	=> $arrOptions,
 					);
@@ -237,7 +238,7 @@ class latestposts_portal extends portal_generic {
 			}
 			
 			if (!$mydb){
-				return $this->user->lang('connerror');
+				return $this->user->lang('latestposts_connerror');
 			}
 
 			// Set some Variables we're using in the BB Modules..
@@ -270,13 +271,7 @@ class latestposts_portal extends portal_generic {
 				
 				$strForums = $this->config('privateforums_'.$groupid);
 				if (method_exists($module, 'getBBForumQuery')){
-					//serialized IDs
-					$arrTmpForums = @unserialize($strForums);
-					if (is_array($arrTmpForums)){
-						foreach ($arrTmpForums as $forumid){
-							$arrForums[] = $forumid;
-						}
-					}
+					$arrForums = $strForums;
 				} else {
 					//comma seperated IDs
 					$arrTmpForums = ($this->config('privateforums')) ? explode(",", $this->config('privateforums')) : '';
@@ -330,16 +325,16 @@ class latestposts_portal extends portal_generic {
 						
 					} else {
 						$myOut .= "<tr valign='top'>
-									<td colspan='3'>".$this->user->lang('noentries')."</td>
+									<td colspan='3'>".$this->user->lang('latestposts_noentries')."</td>
 								</tr>";
 					}					
 					
 					$myOut = "<table cellpadding='3' cellspacing='2' width='100%' class='table colorswitch'>
 							<tr>
-								<th width='50%'>".$this->user->lang('title')."</th>
-								".(($blnForumName) ? '<th class="nowrap" width="10%">'.$this->user->lang('forum').'</th>' : '')."
-								<th width='10%'>".$this->user->lang('posts')."</th>
-								<th width='20%'>".$this->user->lang('lastpost')."</th>
+								<th width='50%'>".$this->user->lang('latestposts_title')."</th>
+								".(($blnForumName) ? '<th class="nowrap" width="10%">'.$this->user->lang('latestposts_forum').'</th>' : '')."
+								<th width='10%'>".$this->user->lang('latestposts_posts')."</th>
+								<th width='20%'>".$this->user->lang('latestposts_lastpost')."</th>
 							</tr>".$myOut;
 				
 					$myOut .= "</table>";
@@ -363,7 +358,7 @@ class latestposts_portal extends portal_generic {
 								$short_title = $row['bb_topic_title'];
 							}
 							$strMemberlinkWrapper = $this->routing->build('external', $row['bb_username'].'-'.$row['bb_user_id'], 'User');
-							$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_topic_id'], 'Topic');
+							$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_post_id'].'-'.$row['bb_topic_id'], 'Topic');
 							
 							$member_link	= (in_array($this->config('linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('member', $row) : $strMemberlinkWrapper;
 							$topic_link		= (in_array($this->config('linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('topic', $row) : $strTopiclinkWrapper;
@@ -378,7 +373,7 @@ class latestposts_portal extends portal_generic {
 						$sucess = true;
 						
 					} else {
-						$myOut = $this->user->lang('noentries');					
+						$myOut = $this->user->lang('latestposts_noentries');					
 					}
 					
 				}

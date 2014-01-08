@@ -24,7 +24,7 @@ class latestpostsmodule_smf {
 	public function getBBQuery($arrPrivateforums, $black_or_white, $topicnumber) {
 		// Build the db query
 		$myBBquery	= "SELECT ms.ID_TOPIC as bb_topic_id, ms.subject as bb_topic_title, 
-						ms.ID_MSG as bb_message_id, ms.posterTime as bb_posttime, t.numReplies as bb_replies, 
+						ms.ID_MSG as bb_post_id, ms.posterTime as bb_posttime, t.numReplies as bb_replies, 
 						ms.ID_MEMBER as bb_poster_id, ms.posterName as bb_username
 						FROM __messages ms, __topics t
 						WHERE ms.ID_MSG = t.ID_LAST_MSG ";
@@ -40,7 +40,7 @@ class latestpostsmodule_smf {
 		if($mode=='member'){
 			return 'index.php?action=profile;u='.$row['bb_poster_id'];
 		}else{
-			return 'index.php?topic='.$row['bb_topic_id'].'.msg'.$row['bb_message_id'].';topicseen#new';
+			return 'index.php?topic='.$row['bb_topic_id'].'.msg'.$row['bb_post_id'].';topicseen#new';
 		}
 	}
 }
