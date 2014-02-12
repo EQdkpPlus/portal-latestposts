@@ -24,8 +24,8 @@ class latestpostsmodule_phpbb3 {
 	public function getBBQuery($arrPrivateforums, $black_or_white, $topicnumber) {
 		// Build the db query
 		$myBBquery	= "SELECT t.topic_title as bb_topic_title, 
-						t.topic_last_post_id as bb_last_post, t.topic_replies as bb_replies,
-						p.post_id as bb_post_id, p.poster_id as bb_poster_id, p.post_time as bb_posttime, 
+						t.topic_last_post_id as bb_post_id, t.topic_replies as bb_replies,
+						p.poster_id as bb_poster_id, p.post_time as bb_posttime, 
 						u.user_id as bb_user_id, u.username as bb_username
 						FROM __topics t, __forums f, __posts p, __users u
 						WHERE t.topic_id = p.topic_id AND

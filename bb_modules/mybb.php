@@ -24,7 +24,7 @@ class latestpostsmodule_mybb {
 	public function getBBQuery($arrPrivateforums, $black_or_white, $topicnumber) {
 			// Build the db query
 			$myBBquery	= "SELECT t.tid as bb_topic_id, t.subject as bb_topic_title, 
-							p.pid as bb_last_post, t.lastpost as bb_posttime, 
+							p.pid as bb_post_id, t.lastpost as bb_posttime, 
 							t.replies as bb_replies, t.lastposteruid as bb_user_id, 
 							t.lastposter as bb_username
 							FROM __threads t, __posts p
@@ -48,7 +48,7 @@ class latestpostsmodule_mybb {
 		if($mode=='member'){
 			return 'member.php?action=profile&uid='.$row['bb_user_id'];
 		}else{
-			return 'showthread.php?tid='.$row['bb_topic_id'].'&pid='.$row['bb_last_post'].'#pid'.$row['bb_last_post'];
+			return 'showthread.php?tid='.$row['bb_topic_id'].'&pid='.$row['bb_post_id'].'#pid'.$row['bb_post_id'];
 		}
 	}
 }
