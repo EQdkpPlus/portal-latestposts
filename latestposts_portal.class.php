@@ -38,7 +38,9 @@ class latestposts_portal extends portal_generic {
 	
 	protected $hooks = array(
 		array('wrapper', 'latestposts_wrapper_hook')
-	);	
+	);
+	
+	protected static $apiLevel = 20;
 	
 	public function get_settings($state){
 		$settings	= array(
