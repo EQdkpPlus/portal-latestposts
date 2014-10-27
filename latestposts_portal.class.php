@@ -49,6 +49,7 @@ class latestposts_portal extends portal_generic {
 				'class'		=> 'js_reload',
 				'options'	=> array(
 					'phpbb3'	=> 'phpBB3',
+					'phpbb31'	=> 'phpBB3.1',
 					'phpbb2'	=> 'phpBB2',
 					'ipb2'		=> 'IPB 2.x',
 					'smf'		=> 'SMF 1.x',
