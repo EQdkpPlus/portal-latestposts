@@ -50,9 +50,9 @@ $lang = array(
 	'latestposts_f_help_privateforums2' => 'Wähle die Foren für die angezeigte Benutzergruppe aus, auf die die Black-/Whitelist angewendet werden soll',
 	'latestposts_noentries'				=> 'Keine Einträge vorhanden',
 	'latestposts_connerror'				=> 'Fehler in der Verbindung',
-	'latestposts_lastpost'				=> 'Letzte Antwort',
+	'latestposts_lastpost'				=> 'Letzter Beitrag',
 	'latestposts_starter'				=> 'Starter',
-	'latestposts_posts'					=> 'Antworten',
+	'latestposts_posts'					=> 'Beiträge',
 	'latestposts_title'					=> 'Thema',
 	'latestposts_forum'					=> 'Forum',
 );
