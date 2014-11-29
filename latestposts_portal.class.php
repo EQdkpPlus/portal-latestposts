@@ -29,7 +29,7 @@ class latestposts_portal extends portal_generic {
 	protected $path		= 'latestposts';
 	protected $data		= array(
 		'name'			=> 'Latest Forum Posts',
-		'version'		=> '2.0.7',
+		'version'		=> '2.0.8',
 		'author'		=> 'WalleniuM',
 		'contact'		=> EQDKP_PROJECT_URL,
 		'description'	=> 'See the latest Forum Posts',
@@ -61,8 +61,9 @@ class latestposts_portal extends portal_generic {
 			'property'	=> 'dropdown',
 			'help'		=> '',
 			'options'	=> array(
-				'phpbb3'	=> 'phpBB3',
-				'phpbb2'	=> 'phpBB2',
+				'phpbb3'	=> 'phpBB 3',
+				'phpbb31'	=> 'phpBB 3.1',
+				'phpbb2'	=> 'phpBB 2',
 				'ipb2'		=> 'IPB 2.x',
 				'smf'		=> 'SMF 1.x',
 				'smf2'		=> 'SMF 2.x',
