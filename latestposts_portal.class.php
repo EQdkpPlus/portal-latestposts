@@ -274,7 +274,7 @@ class latestposts_portal extends portal_generic {
 				
 				$strForums = $this->config('privateforums_'.$groupid);
 				if (method_exists($module, 'getBBForumQuery')){
-					$arrForums = $strForums;
+					$arrForums = array_merge($arrForums, $strForums);
 				} else {
 					//comma seperated IDs
 					$arrTmpForums = ($this->config('privateforums')) ? explode(",", $this->config('privateforums')) : '';
@@ -286,7 +286,9 @@ class latestposts_portal extends portal_generic {
 						}
 					}
 				}
-			}		
+			}
+			
+			$arrForums = array_unique($arrForums);
 			
 			// if there are no forums selected and its whitelist
 			if (count($arrForums) == 0 && $black_or_white == 'IN') return $this->user->lang('portal_latestposts_noselectedboards');
