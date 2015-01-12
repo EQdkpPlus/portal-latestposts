@@ -337,7 +337,7 @@ class latestposts_portal extends portal_generic {
 								</tr>";
 					}					
 					
-					$myOut = "<table cellpadding='3' cellspacing='2' width='100%' class='table colorswitch'>
+					$myOut = "<table class='table fullwidth colorswitch'>
 							<tr>
 								<th width='50%'>".$this->user->lang('latestposts_title')."</th>
 								".(($blnForumName) ? '<th class="nowrap" width="10%">'.$this->user->lang('latestposts_forum').'</th>' : '')."
@@ -353,7 +353,7 @@ class latestposts_portal extends portal_generic {
 				// Sidebar Output				
 				$objQuery = $mydb->query($strQuery);
 				if($objQuery){
-					$myOut = "<table cellpadding='3' cellspacing='2' width='100%' class='colorswitch'>";
+					$myOut = "<table class='table fullwidth colorswitch'>";
 					$arrResult = $objQuery->fetchAllAssoc();
 					if (count($arrResult)){
 						$sucess = true;
