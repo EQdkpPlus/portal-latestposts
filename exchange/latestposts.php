@@ -43,7 +43,7 @@ if (!class_exists('exchange_latestposts')){
 				//Try a database connection
 				if($this->config->get('cmsbridge_active') == 1 && $this->config->get('dbmode', 'pmod_'.$this->module_id) == 'bridge'){
 					//Bridge Connection
-					$mydb		= $this->bridge->db;
+					$mydb		= $this->bridge->bridgedb;
 					//change prefix
 					if (strlen(trim($this->config->get('dbprefix', 'pmod_'.$this->module_id)))) $mydb->setPrefix(trim($this->config->get('dbprefix', 'pmod_'.$this->module_id)));
 				} elseif($this->config->get('dbmode', 'pmod_'.$this->module_id) == 'new'){

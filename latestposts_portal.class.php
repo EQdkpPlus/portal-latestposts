@@ -140,7 +140,7 @@ class latestposts_portal extends portal_generic {
 		//Try a database connection
 		if((int)$this->config->get('cmsbridge_active') == 1 && $this->config('dbmode') == 'bridge'){
 			//Bridge Connection
-			$mydb		= $this->bridge->db;
+			$mydb		= $this->bridge->bridgedb;
 			//change prefix
 			if (strlen(trim($this->config('dbprefix')))) $mydb->setPrefix(trim($this->config('dbprefix')));
 		} elseif($this->config('dbmode') == 'new'){
@@ -223,7 +223,7 @@ class latestposts_portal extends portal_generic {
 			//Try a database connection
 			if($this->config->get('cmsbridge_active') == 1 && $this->config('dbmode') == 'bridge'){
 				//Bridge Connection
-				$mydb		= $this->bridge->db;
+				$mydb		= $this->bridge->bridgedb;
 				//change prefix
 				if (strlen(trim($this->config('dbprefix')))) $mydb->setPrefix(trim($this->config('dbprefix')));
 			} elseif($this->config('dbmode') == 'new'){
