@@ -55,6 +55,7 @@ class latestposts_portal extends portal_generic {
 					'phpbb31'	=> 'phpBB3.1',
 					'phpbb2'	=> 'phpBB2',
 					'ipb2'		=> 'IPB 2.x',
+					'ipb3'		=> 'IPB 3.x',
 					'smf'		=> 'SMF 1.x',
 					'smf2'		=> 'SMF 2.x',
 					'vb3'		=> 'vBulletin 3',
