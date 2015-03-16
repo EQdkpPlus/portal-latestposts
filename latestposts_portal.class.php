@@ -62,6 +62,7 @@ class latestposts_portal extends portal_generic {
 					'vb4'		=> 'vBulletin 4',
 					'wbb3'		=> 'WBB 3',
 					'wbb4'		=> 'WBB 4',
+					'wbb4_1'	=> 'WBB 4.1',
 					'e107'		=> 'e107',
 					'mybb'		=> 'MyBB',
 				),
