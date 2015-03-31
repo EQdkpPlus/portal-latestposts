@@ -50,7 +50,7 @@ if (!class_exists('exchange_latestposts')){
 					//Another Database
 					try {
 						$mydb = dbal::factory(array(
-							'dbtype' => 'mysqli',
+							'dbtype' => registry::get_const('dbtype'),
 							'debug_prefix' => 'latestposts_',
 							'table_prefix' => trim($this->config->get('dbprefix', 'pmod_'.$this->module_id))
 						));
@@ -66,7 +66,7 @@ if (!class_exists('exchange_latestposts')){
 				}else{
 					//Same Database
 					try {
-						$mydb = dbal::factory(array('dbtype' => 'mysqli', 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('dbprefix', 'pmod_'.$this->module_id))));
+						$mydb = dbal::factory(array('dbtype' => registry::get_const('dbtype'), 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config->get('dbprefix', 'pmod_'.$this->module_id))));
 					} catch(DBALException $e){
 						$mydb = false;
 					}

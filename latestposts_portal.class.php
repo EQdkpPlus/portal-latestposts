@@ -148,7 +148,7 @@ class latestposts_portal extends portal_generic {
 		} elseif($this->config('dbmode') == 'new'){
 			//Another Database
 			try {
-				$mydb = dbal::factory(array('dbtype' => 'mysqli', 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config('dbprefix'))));
+				$mydb = dbal::factory(array('dbtype' => registry::get_const('dbtype'), 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config('dbprefix'))));
 				$mydb->connect($this->encrypt->decrypt($this->config('dbhost')), $this->encrypt->decrypt($this->config('dbname')), $this->encrypt->decrypt($this->config('dbuser')), $this->encrypt->decrypt($this->config('dbpassword')));
 			} catch(DBALException $e){
 				$mydb = false;
@@ -156,7 +156,7 @@ class latestposts_portal extends portal_generic {
 		}else{
 			//Same Database
 			try {
-				$mydb = dbal::factory(array('dbtype' => 'mysqli', 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config('dbprefix'))));			
+				$mydb = dbal::factory(array('dbtype' => registry::get_const('dbtype'), 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config('dbprefix'))));			
 			} catch(DBALException $e){
 				$mydb = false;
 			}
@@ -231,7 +231,7 @@ class latestposts_portal extends portal_generic {
 			} elseif($this->config('dbmode') == 'new'){
 				//Another Database
 				try {
-					$mydb = dbal::factory(array('dbtype' => 'mysqli', 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config('dbprefix'))));
+					$mydb = dbal::factory(array('dbtype' => registry::get_const('dbtype'), 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config('dbprefix'))));
 					$mydb->connect($this->encrypt->decrypt($this->config('dbhost')), $this->encrypt->decrypt($this->config('dbname')), $this->encrypt->decrypt($this->config('dbuser')), $this->encrypt->decrypt($this->config('dbpassword')));
 				} catch(DBALException $e){
 					$mydb = false;
@@ -239,7 +239,7 @@ class latestposts_portal extends portal_generic {
 			}else{
 				//Same Database
 				try {
-					$mydb = dbal::factory(array('dbtype' => 'mysqli', 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config('dbprefix'))));			
+					$mydb = dbal::factory(array('dbtype' => registry::get_const('dbtype'), 'open'=>true, 'debug_prefix' => 'latestposts_', 'table_prefix' => trim($this->config('dbprefix'))));			
 				} catch(DBALException $e){
 					$mydb = false;
 				}
