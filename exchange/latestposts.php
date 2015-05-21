@@ -95,19 +95,17 @@ if (!class_exists('exchange_latestposts')){
 					$arrUserMemberships = $this->pdh->get('user_groups_users', 'memberships', array($this->user->id));
 					array_push($arrUserMemberships, 0);
 					$arrForums = array();
-					foreach ($arrUserMemberships as $groupid){
-						$strForums = $this->config->get('privateforums_'.$groupid, 'pmod_'.$this->module_id);
+					$visibilityGrps = $this->config('visibility');
+					foreach ($arrUserMemberships as $groupid) {
+						//only load forums for which actual settings are set
+						if(!in_array($groupid, $visibilityGrps)) continue;
+						
+						$strForums = $this->config('privateforums_'.$groupid);
 						if (method_exists($module, 'getBBForumQuery')){
-							//serialized IDs
-							$arrTmpForums = @unserialize($strForums);
-							if (is_array($arrTmpForums)){
-								foreach ($arrTmpForums as $forumid){
-									$arrForums[] = $forumid;
-								}
-							}
+							$arrForums = array_merge($arrForums, $strForums);
 						} else {
 							//comma seperated IDs
-							$arrTmpForums = ($this->config->get('privateforums', 'pmod_'.$this->module_id)) ? explode(",", $this->config->get('privateforums', 'pmod_'.$this->module_id)) : '';
+							$arrTmpForums = ($this->config('privateforums')) ? explode(",", $this->config('privateforums')) : '';
 							if(is_array($arrTmpForums)){
 								foreach($arrTmpForums as $forumid){
 									if(trim($forumid) != ''){
@@ -117,6 +115,8 @@ if (!class_exists('exchange_latestposts')){
 							}
 						}
 					}
+					
+					$arrForums = array_unique($arrForums);
 					
 					$strQuery = $module->getBBQuery($arrForums, $black_or_white, $intNumber);
 					$myOut['forum_url'] = htmlentities($this->config->get('url', 'pmod_'.$this->module_id));
