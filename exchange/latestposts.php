@@ -95,17 +95,17 @@ if (!class_exists('exchange_latestposts')){
 					$arrUserMemberships = $this->pdh->get('user_groups_users', 'memberships', array($this->user->id));
 					array_push($arrUserMemberships, 0);
 					$arrForums = array();
-					$visibilityGrps = $this->config('visibility');
+					$visibilityGrps = $this->config->get('visibility', 'pmod_'.$this->module_id);
 					foreach ($arrUserMemberships as $groupid) {
 						//only load forums for which actual settings are set
 						if(!in_array($groupid, $visibilityGrps)) continue;
 						
-						$strForums = $this->config('privateforums_'.$groupid);
+						$strForums = $this->config->get('privateforums_'.$groupid, 'pmod_'.$this->module_id);
 						if (method_exists($module, 'getBBForumQuery')){
 							$arrForums = array_merge($arrForums, $strForums);
 						} else {
 							//comma seperated IDs
-							$arrTmpForums = ($this->config('privateforums')) ? explode(",", $this->config('privateforums')) : '';
+							$arrTmpForums = ($this->config->get('privateforums', 'pmod_'.$this->module_id)) ?  explode(",", $this->config->get('privateforums', 'pmod_'.$this->module_id)) : '';
 							if(is_array($arrTmpForums)){
 								foreach($arrTmpForums as $forumid){
 									if(trim($forumid) != ''){
