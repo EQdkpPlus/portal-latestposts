@@ -28,7 +28,7 @@ class latestposts_portal extends portal_generic {
 	protected static $path		= 'latestposts';
 	protected static $data		= array(
 		'name'			=> 'Latest Forum Posts',
-		'version'		=> '3.0.4',
+		'version'		=> '3.0.5',
 		'author'		=> 'WalleniuM',
 		'icon'			=> 'fa-group',
 		'contact'		=> EQDKP_PROJECT_URL,
@@ -326,7 +326,7 @@ class latestposts_portal extends portal_generic {
 							}		
 							$myOut .= "</td>
 										<td align='center'>".$row['bb_replies']."</td>
-										<td><a href='".htmlentities($topic_link)."' target='".$myTarget."'>".$this->time->user_date($row['bb_posttime'], true)."</a>, 
+										<td><a href='".htmlentities($topic_link)."' target='".$myTarget."'>".$this->time->createTimeTag($row['bb_posttime'], $this->time->user_date($row['bb_posttime'], true))."</a>, 
 										<a href='".htmlentities($member_link)."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".htmlentities($topic_link)."' target='".$myTarget."'></a>
 										<a href='".htmlentities($topic_link)."' target='".$myTarget."'><i class=\"fa fa-chevron-right\"></i></a>
 										</td>
@@ -375,7 +375,7 @@ class latestposts_portal extends portal_generic {
 							$myOut .= "<tr valign='top'>
 									<td>
 										<a href='".$topic_link."' target='".$myTarget."'>".$short_title."</a> (".$row['bb_replies'].")<br/>
-										".$this->time->user_date($row['bb_posttime'], true).", <a href='".$member_link."' target='".$myTarget."'>".sanitize($row['bb_username'])."</a>
+										".$this->time->createTimeTag($row['bb_posttime'], $this->time->user_date($row['bb_posttime'], true)).", <a href='".$member_link."' target='".$myTarget."'>".sanitize($row['bb_username'])."</a>
 									</td>
 								</tr>";
 						}
