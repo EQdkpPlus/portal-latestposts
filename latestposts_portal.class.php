@@ -311,7 +311,7 @@ class latestposts_portal extends portal_generic {
 					if (count($arrResult)){
 						foreach($arrResult as $row){
 							$strMemberlinkWrapper = $this->routing->build('external', $row['bb_username'].'-'.$row['bb_user_id'], 'User');
-							$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_topic_id'], 'Topic');
+							$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_post_id'].'-'.$row['bb_topic_id'], 'Topic');
 						
 							$member_link	= (in_array($this->config('linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('member', $row) : $strMemberlinkWrapper;
 							$topic_link		= (in_array($this->config('linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('topic', $row) : $strTopiclinkWrapper;
