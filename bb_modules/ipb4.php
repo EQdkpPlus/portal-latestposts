@@ -22,41 +22,43 @@
 if ( !defined('EQDKP_INC') ){
 	header('HTTP/1.0 404 Not Found');exit;
 }
-
-class latestpostsmodule_phpbb31 {
+class latestpostsmodule_ipb4 {
 
 	public function getBBQuery($arrPrivateforums, $black_or_white, $topicnumber) {
-		// Build the db query
-		$myBBquery	= "SELECT t.topic_id as bb_topic_id, t.topic_title as bb_topic_title, 
-						t.topic_last_post_id as bb_last_post, t.forum_id as bb_forum_id,  f.forum_name as bb_forum_name,
-						p.post_id as bb_post_id, p.poster_id as bb_poster_id, p.post_time as bb_posttime, 
-						u.user_id as bb_user_id, u.username as bb_username, t.topic_posts_approved as bb_replies,
-						p.post_text as bb_content
-						FROM __topics t, __forums f, __posts p, __users u
-						WHERE t.topic_id = p.topic_id AND
-						f.forum_id = t.forum_id AND
-						t.topic_status <> 2 AND ";
+		$myBBquery	= "SELECT t.tid as bb_topic_id, 
+			t.title as bb_topic_title, 
+			t.forum_id as bb_forum_id, 
+			t.last_post as bb_posttime, 
+			t.posts as bb_replies, 
+			t.last_poster_id as bb_poster_id, 
+			m.name as bb_username
+			FROM __forums_topics t, __core_members m
+			WHERE t.last_poster_id = m.member_id ";
 		if(is_array($arrPrivateforums) && !empty($arrPrivateforums)){
-			$myBBquery .= "t.forum_id ".$black_or_white."(". implode(', ', $arrPrivateforums).") AND ";
+			$myBBquery .= " AND t.forum_id ".$black_or_white."(". implode(', ', $arrPrivateforums).") ";
 		}
-		$myBBquery	.= "p.post_id = t.topic_last_post_id AND
-						p.poster_id = u.user_id
-						ORDER BY p.post_id DESC LIMIT ".trim($topicnumber);
+		$myBBquery	.= "ORDER BY t.last_post DESC LIMIT ".trim($topicnumber);
 						
 		return $myBBquery;
 	}
 	
 	public function getBBForumQuery(){
-		$myBBforumQuery = "SELECT forum_id as id, forum_name as name FROM __forums ORDER BY left_id ASC";	
+		$myBBforumQuery = "SELECT id as id, name as name FROM __forums_forums ORDER BY position ASC";
 		return $myBBforumQuery;
 	}
 	
+	public function getBBPostContent($row){
+		$myBBquery	= "SELECT p.pid, p.post as bb_content FROM __forum_posts p WHERE p.pid = ".intval($row['bb_post_id']);
+		return $myBBquery;
+	}
 	
 	public function getBBLink($mode, $row){
-		if($mode=='member'){
-			return 'memberlist.php?mode=viewprofile&u='.$row['bb_user_id'];
-		}else{
-			return 'viewtopic.php?f='.$row['bb_forum_id'].'&t='.$row['bb_topic_id'].'&p='.$row['bb_post_id'].'#p'.$row['bb_post_id'];
+		if($mode == 'member'){
+			//http://localhost/sonstige/ipb4/index.php?/profile/1-admin/
+			return "index.php?/profile/".$row['bb_poster_id']."-".$row['bb_username']."/";
+		} else {
+			//http://localhost/sonstige/ipb4/index.php?/topic/1-welcome/
+			return "index.php?/topic/".$row['bb_topic_id']."-".$row['bb_topic_id']."/?view=getlastpost";
 		}
 	}
 }

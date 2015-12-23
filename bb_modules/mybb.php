@@ -23,13 +23,14 @@ if ( !defined('EQDKP_INC') ){
 	header('HTTP/1.0 404 Not Found');exit;
 }
 class latestpostsmodule_mybb {
-
+	
 	public function getBBQuery($arrPrivateforums, $black_or_white, $topicnumber) {
 			// Build the db query
 			$myBBquery	= "SELECT t.tid as bb_topic_id, t.subject as bb_topic_title, 
 							p.pid as bb_post_id, t.lastpost as bb_posttime, 
 							t.replies as bb_replies, t.lastposteruid as bb_user_id, 
-							t.lastposter as bb_username
+							t.lastposter as bb_username,
+							p.message as bb_content
 							FROM __threads t, __posts p
 							WHERE t.tid = p.tid";
 			if(is_array($arrPrivateforums) && !empty($arrPrivateforums)){

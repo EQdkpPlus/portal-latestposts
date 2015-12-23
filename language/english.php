@@ -64,7 +64,10 @@ $lang = array(
 	"latestposts_posts" => 'Replies',
 	"latestposts_title" => 'Topic',
 	"latestposts_forum" => 'Board',
-	
+	'latestposts_display_normal'		=> 'Normal',
+	'latestposts_display_accordion'		=> 'Accordion',
+	'latestposts_f_showcontent'			=> 'Show Preview of post',
+	'latestposts_f_style'				=> 'Display',
 );
 
 ?>

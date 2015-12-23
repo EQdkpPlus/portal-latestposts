@@ -28,8 +28,8 @@ class latestposts_portal extends portal_generic {
 	protected static $path		= 'latestposts';
 	protected static $data		= array(
 		'name'			=> 'Latest Forum Posts',
-		'version'		=> '3.0.5',
-		'author'		=> 'WalleniuM',
+		'version'		=> '3.1.0',
+		'author'		=> 'GodMod',
 		'icon'			=> 'fa-group',
 		'contact'		=> EQDKP_PROJECT_URL,
 		'description'	=> 'View the latest Forum posts.',
@@ -56,6 +56,7 @@ class latestposts_portal extends portal_generic {
 					'phpbb2'	=> 'phpBB2',
 					'ipb2'		=> 'IPB 2.x',
 					'ipb3'		=> 'IPB 3.x',
+					'ipb4'		=> 'IPB 4.x',
 					'smf'		=> 'SMF 1.x',
 					'smf2'		=> 'SMF 2.x',
 					'vb3'		=> 'vBulletin 3',
@@ -131,7 +132,19 @@ class latestposts_portal extends portal_generic {
 					'black'		=> 'Blacklist',
 					'white'		=> 'Whitelist',
 				)
-			),		
+			),
+			'showcontent' => array(
+				'type' 		=> 'radio',
+				'default'	=> 1,
+			),
+			'style'	=> array(
+				'type'		=> 'dropdown',
+				'tolang'	=> true,
+				'options'	=> array(
+					'normal'	=> 'latestposts_display_normal',
+					'accordion'	=> 'latestposts_display_accordion',
+				),
+			),
 		);
 	
 		// kill the bridge option if its disabled
@@ -273,9 +286,13 @@ class latestposts_portal extends portal_generic {
 			array_push($arrUserMemberships, 0);
 			$arrForums = array();
 			$visibilityGrps = $this->config('visibility');
+
 			foreach ($arrUserMemberships as $groupid) {
 				//only load forums for which actual settings are set
-				if(!in_array($groupid, $visibilityGrps)) continue;
+
+				if(!in_array($groupid, $visibilityGrps)) {
+					continue;
+				}
 				
 				$strForums = $this->config('privateforums_'.$groupid);
 				if (method_exists($module, 'getBBForumQuery')){
@@ -292,101 +309,145 @@ class latestposts_portal extends portal_generic {
 					}
 				}
 			}
-			
+
 			$arrForums = array_unique($arrForums);
-			//d($arrForums);
+			
 			// if there are no forums selected and its whitelist
 			if (count($arrForums) == 0 && $black_or_white == 'IN') return $this->user->lang('portal_latestposts_noselectedboards');
 			
 			$strQuery = $module->getBBQuery($arrForums, $black_or_white, $topicnumber);
+			$objQuery = $mydb->query($strQuery);
+			$arrData = array();
+			if ($objQuery){
+				$sucess = true;
+				$blnForumName = false;
+				
+				$arrResult = $objQuery->fetchAllAssoc();
+				if (count($arrResult)){
+					foreach($arrResult as $row){
+						//Get Content
+						$strContent = "";
+						if(isset($row['bb_content'])){
+							$strContent = $row['bb_content'];
+						}elseif(method_exists($module, 'getBBPostContent')){
+							$strContentQuery = $module->getBBPostContent($row);
+							$objContentQuery = $mydb->query($strContentQuery);
+							if($objContentQuery){
+								$arrResult = $objContentQuery->fetchAssoc();
+								$strContent = $arrResult['bb_content'];
+							}
+						}
+							
+						//Sanitize Content
+						$strContent = strip_tags($strContent);
+						$strContent = $this->remove_bbcode($strContent);
+						$strContent = cut_text($strContent, 300, true);
+							
+						$strMemberlinkWrapper = $this->routing->build('external', $row['bb_username'].'-'.$row['bb_user_id'], 'User');
+						$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_post_id'].'-'.$row['bb_topic_id'], 'Topic');
+				
+						$member_link	= (in_array($this->config('linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('member', $row) : $strMemberlinkWrapper;
+						$topic_link		= (in_array($this->config('linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('topic', $row) : $strTopiclinkWrapper;
+						
+						
+						$arrData[] = array(
+							'content' 		=> ($this->config('showcontent') !== false && $this->config('showcontent')) ? $strContent : '',
+							'member_link'	=> $member_link,
+							'topic_link'	=> $topic_link,
+							'topic_title'	=> $row['bb_topic_title'],
+							'forum_name'	=> $row['bb_forum_name'],
+							'replies'		=> ($row['bb_replies']) ? $row['bb_replies'] : 0,
+							'posttime'		=> $row['bb_posttime'],
+							'username'		=> $row['bb_username'],
+							'post_id'		=> $row['bb_post_id'],
+							'topic_id'		=> $row['bb_topic_id'],
+							'forum_id'		=> $row['bb_forum_id'],	
+						);
+					}
+				}
+			} else {
+				$myOut = "An error occured. Please check your settings.";
+				return $myOut;
+			}
 
 			// Wide Content
 			if($this->wide_content){
-				$objQuery = $mydb->query($strQuery);
-				if ($objQuery){
-					$sucess = true;
-					$blnForumName = false;
-					
-					$arrResult = $objQuery->fetchAllAssoc();
-					if (count($arrResult)){
-						foreach($arrResult as $row){
-							$strMemberlinkWrapper = $this->routing->build('external', $row['bb_username'].'-'.$row['bb_user_id'], 'User');
-							$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_post_id'].'-'.$row['bb_topic_id'], 'Topic');
-						
-							$member_link	= (in_array($this->config('linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('member', $row) : $strMemberlinkWrapper;
-							$topic_link		= (in_array($this->config('linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('topic', $row) : $strTopiclinkWrapper;
-	
-							$myOut .= "<tr valign='top'>
-										<td>
-											<a href='".htmlentities($topic_link)."' target='".$myTarget."'>".$row['bb_topic_title']."</a>											
-										</td>";
-							if (isset($row['bb_forum_name'])) {
-								$myOut .= "<td>".$row['bb_forum_name']."</td>";
-								$blnForumName = true;
-							}		
-							$myOut .= "</td>
-										<td align='center'>".$row['bb_replies']."</td>
-										<td><a href='".htmlentities($topic_link)."' target='".$myTarget."'>".$this->time->createTimeTag($row['bb_posttime'], $this->time->user_date($row['bb_posttime'], true))."</a>, 
-										<a href='".htmlentities($member_link)."' target='".$myTarget."'>".$row['bb_username']."</a> <a href='".htmlentities($topic_link)."' target='".$myTarget."'></a>
-										<a href='".htmlentities($topic_link)."' target='".$myTarget."'><i class=\"fa fa-chevron-right\"></i></a>
-										</td>
-									</tr>";		
-						}
-						
-					} else {
+				if(count($arrData)){
+					foreach($arrData as $row){
 						$myOut .= "<tr valign='top'>
+										<td>
+											<a href='".htmlentities($row['topic_link'])."' target='".$myTarget."' class='coretip' data-coretip='".$row['content']."'>".$row['topic_title']."</a>
+										</td>";
+						
+						if (isset($row['forum_name']) && $row['forum_name'] != "") {
+							$myOut .= "<td>".$row['forum_name']."</td>";
+							$blnForumName = true;
+						}
+						$myOut .= "</td>
+										<td align='center'>".$row['replies']."</td>
+										<td><a href='".htmlentities($row['topic_link'])."' target='".$myTarget."'>".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))."</a>,
+										<a href='".htmlentities($row['member_link'])."' target='".$myTarget."'><i class=\"fa fa-user\"></i>".$row['username']."</a> <a href='".htmlentities($row['topic_link'])."' target='".$myTarget."'></a>
+										<a href='".htmlentities($row['topic_link'])."' target='".$myTarget."'><i class=\"fa fa-chevron-right\"></i></a>
+										</td>
+									</tr>";
+						
+						$arrOut[$row['topic_title'].", ".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))] = "<a href='".$row['topic_link']."' target='".$myTarget."'>".$row['content']."</a>
+<br /><a href='".$row['member_link']."' target='".$myTarget."'><i class='fa fa-user'></i>".sanitize($row['username'])."</a>, <i class='fa fa-comments'></i>".$row['replies']."
+								";
+					}
+				} else {
+					$myOut .= "<tr valign='top'>
 									<td colspan='3'>".$this->user->lang('latestposts_noentries')."</td>
 								</tr>";
-					}					
-					
-					$myOut = "<table class='table fullwidth colorswitch'>
-							<tr>
-								<th width='50%'>".$this->user->lang('latestposts_title')."</th>
-								".(($blnForumName) ? '<th class="nowrap" width="10%">'.$this->user->lang('latestposts_forum').'</th>' : '')."
-								<th width='10%'>".$this->user->lang('latestposts_posts')."</th>
-								<th width='20%'>".$this->user->lang('latestposts_lastpost')."</th>
-							</tr>".$myOut;
+				}
 				
-					$myOut .= "</table>";
-				} else {
-					$myOut = "An error occured. Please check your settings.";
-				}					
+					
+				$myOut = "<table class='table fullwidth colorswitch'>
+						<tr>
+							<th width='50%'>".$this->user->lang('latestposts_title')."</th>
+							".(($blnForumName) ? '<th class="nowrap" width="10%">'.$this->user->lang('latestposts_forum').'</th>' : '')."
+							<th width='10%'>".$this->user->lang('latestposts_posts')."</th>
+							<th width='20%'>".$this->user->lang('latestposts_lastpost')."</th>
+						</tr>".$myOut;
+			
+				$myOut .= "</table>";
+				$sucess = true;
+				
+				if($this->config('style') == 'accordion'){
+					$myOut = '<div style="white-space:normal;">'.$this->jquery->accordion('accordion_'.$this->id, $arrOut).'</div>';
+				}
+					
 			} else {
-				// Sidebar Output				
-				$objQuery = $mydb->query($strQuery);
-				if($objQuery){
+				$myTitleLength = ($this->config('trimtitle')) ? $this->config('trimtitle') : 40;
+				if(count($arrData)){
 					$myOut = "<table class='table fullwidth colorswitch'>";
-					$arrResult = $objQuery->fetchAllAssoc();
-					if (count($arrResult)){
-						$sucess = true;
-						$myTitleLength = ($this->config('trimtitle')) ? $this->config('trimtitle') : 40;
+					
+					foreach($arrData as $row){
+						$short_title = cut_text($row['topic_title'], $myTitleLength, true);
+								
+						$myOut .= "<tr valign='top'>
+								<td>
+									<a href='".$row['topic_link']."' target='".$myTarget."' class='coretip' data-coretip='".$row['content']."'>".$short_title."</a> (<i class='fa fa-comments'></i>".$row['replies'].")<br/>
+									".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true)).", <a href='".$row['member_link']."' target='".$myTarget."'><i class='fa fa-user'></i>".sanitize($row['username'])."</a>
+								</td>
+							</tr>";
 						
-						foreach($arrResult as $row){
-							if (strlen($row['bb_topic_title']) > $myTitleLength){
-								$short_title = substr($row['bb_topic_title'], 0, $myTitleLength)."...";
-							}else{
-								$short_title = $row['bb_topic_title'];
-							}
-							$strMemberlinkWrapper = $this->routing->build('external', $row['bb_username'].'-'.$row['bb_user_id'], 'User');
-							$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_post_id'].'-'.$row['bb_topic_id'], 'Topic');
-							
-							$member_link	= (in_array($this->config('linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('member', $row) : $strMemberlinkWrapper;
-							$topic_link		= (in_array($this->config('linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('topic', $row) : $strTopiclinkWrapper;
-							$myOut .= "<tr valign='top'>
-									<td>
-										<a href='".$topic_link."' target='".$myTarget."'>".$short_title."</a> (".$row['bb_replies'].")<br/>
-										".$this->time->createTimeTag($row['bb_posttime'], $this->time->user_date($row['bb_posttime'], true)).", <a href='".$member_link."' target='".$myTarget."'>".sanitize($row['bb_username'])."</a>
-									</td>
-								</tr>";
-						}
-						$myOut .= "</table>";
-						$sucess = true;
-						
-					} else {
-						$myOut = $this->user->lang('latestposts_noentries');					
+						$arrOut[$short_title] = $this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))."<br /><a href='".$row['topic_link']."' target='".$myTarget."'>".$row['content']."</a>
+<br /><a href='".$row['member_link']."' target='".$myTarget."'><i class='fa fa-user'></i>".sanitize($row['username'])."</a>, <i class='fa fa-comments'></i>".$row['replies']."
+								";
 					}
 					
+					$myOut .= "</table>";
+					$sucess = true;
+				} else {
+					$myOut = $this->user->lang('latestposts_noentries');	
+				} 
+				
+				if($this->config('style') == 'accordion'){
+					$myOut = '<div style="white-space:normal;">'.$this->jquery->accordion('accordion_'.$this->id, $arrOut).'</div>';
 				}
+				
+				
 			}
 			
 			//reset prefix
@@ -400,5 +461,12 @@ class latestposts_portal extends portal_generic {
 		}
 		return $myOut;
 	}
+	
+		function remove_bbcode($string)
+		{
+		    $pattern = '|[[\/\!]*?[^\[\]]*?]|si';
+		    $replace = '';
+		    return preg_replace($pattern, $replace, $string);
+		}
 }
 ?>

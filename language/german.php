@@ -58,5 +58,10 @@ $lang = array(
 	'latestposts_posts'					=> 'Beiträge',
 	'latestposts_title'					=> 'Thema',
 	'latestposts_forum'					=> 'Forum',
+	
+	'latestposts_display_normal'		=> 'Normal',
+	'latestposts_display_accordion'		=> 'Akkordion',
+	'latestposts_f_showcontent'			=> 'Vorschau des Posts anzeigen',
+	'latestposts_f_style'				=> 'Darstellung',
 );
 ?>

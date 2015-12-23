@@ -29,7 +29,8 @@ class latestpostsmodule_wbb3 {
 			$myBBquery	= "SELECT t.threadID as bb_topic_id, t.topic as bb_topic_title, 
 							p.postID as bb_post_id, t.lastPostTime as bb_posttime, 
 							t.replies as bb_replies, t.lastPosterID as bb_user_id, 
-							t.lastPoster as bb_username, b.title as bb_forum_name
+							t.lastPoster as bb_username, b.title as bb_forum_name,
+							p.message as bb_content
 							FROM __thread t, __post p, __board b
 							WHERE t.threadID = p.threadid";
 			if(is_array($arrPrivateforums) && !empty($arrPrivateforums)){

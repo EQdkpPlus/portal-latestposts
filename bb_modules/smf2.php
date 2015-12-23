@@ -28,7 +28,8 @@ class latestpostsmodule_smf2 {
 		// Build the db query
 		$myBBquery	= "SELECT ms.ID_TOPIC as bb_topic_id, ms.subject as bb_topic_title, 
 						ms.ID_MSG as bb_post_id, ms.poster_time as bb_posttime, t.num_replies as bb_replies, 
-						ms.ID_MEMBER as bb_poster_id, ms.poster_name as bb_username
+						ms.ID_MEMBER as bb_poster_id, ms.poster_name as bb_username,
+						ms.body as bb_content
 						FROM __messages ms, __topics t
 						WHERE ms.ID_MSG = t.ID_LAST_MSG ";
 		if(is_array($arrPrivateforums) && !empty($arrPrivateforums)){

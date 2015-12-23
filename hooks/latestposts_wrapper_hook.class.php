@@ -59,7 +59,7 @@ if (!class_exists('latestposts_wrapper_hook')){
 			
 			if($arrParams['id'] == 'topic'){
 				$row = array(
-					'bb_topic_id' => $arrPath[0],
+					'bb_topic_id'	=> $arrPath[0],
 					'bb_post_id'	=> $arrPath[1],
 				);
 				
