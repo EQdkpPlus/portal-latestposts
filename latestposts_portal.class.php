@@ -224,9 +224,9 @@ class latestposts_portal extends portal_generic {
 	
 	
 	public function output() {
-		$myOut = $this->pdc->get('portal.module.latestposts.u'.$this->user->id,false,true);
+		$arrData = $this->pdc->get('portal.module.latestposts.u'.$this->user->id,false,true);
 
-		if(!$myOut){
+		if(!$arrData){
 			// do the link-thing..
 			$myTarget	= ($this->config('linktype') == '1') ? '_blank' : '';
 			$strBoardURL = $this->config('url');
@@ -365,100 +365,102 @@ class latestposts_portal extends portal_generic {
 						);
 					}
 				}
+				
+				//Cache the data
+				if (isset($sucess)) {
+					$this->pdc->put('portal.module.latestposts.u'.$this->user->id,$arrData,300,false,true);
+				}
 			} else {
 				$myOut = "An error occured. Please check your settings.";
 				return $myOut;
 			}
+			
+		} //Now we should have data
 
-			// Wide Content
-			if($this->wide_content){
-				if(count($arrData)){
-					foreach($arrData as $row){
-						$myOut .= "<tr valign='top'>
+		// Wide Content
+		if($this->wide_content){
+			if(count($arrData)){
+				foreach($arrData as $row){
+					$myOut .= "<tr valign='top'>
 										<td>
 											<a href='".htmlentities($row['topic_link'])."' target='".$myTarget."' class='coretip' data-coretip='".$row['content']."'>".$row['topic_title']."</a>
 										</td>";
 						
-						if (isset($row['forum_name']) && $row['forum_name'] != "") {
-							$myOut .= "<td>".$row['forum_name']."</td>";
-							$blnForumName = true;
-						}
-						$myOut .= "</td>
-										<td align='center'>".$row['replies']."</td>
-										<td><a href='".htmlentities($row['topic_link'])."' target='".$myTarget."'>".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))."</a>,
-										<a href='".htmlentities($row['member_link'])."' target='".$myTarget."'><i class=\"fa fa-user\"></i>".$row['username']."</a> <a href='".htmlentities($row['topic_link'])."' target='".$myTarget."'></a>
-										<a href='".htmlentities($row['topic_link'])."' target='".$myTarget."'><i class=\"fa fa-chevron-right\"></i></a>
-										</td>
-									</tr>";
-						
-						$arrOut[$row['topic_title'].", ".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))] = "<a href='".$row['topic_link']."' target='".$myTarget."'>".$row['content']."</a>
-<br /><a href='".$row['member_link']."' target='".$myTarget."'><i class='fa fa-user'></i>".sanitize($row['username'])."</a>, <i class='fa fa-comments'></i>".$row['replies']."
-								";
+					if (isset($row['forum_name']) && $row['forum_name'] != "") {
+						$myOut .= "<td>".$row['forum_name']."</td>";
+						$blnForumName = true;
 					}
-				} else {
-					$myOut .= "<tr valign='top'>
-									<td colspan='3'>".$this->user->lang('latestposts_noentries')."</td>
+					$myOut .= "</td>
+									<td align='center'>".$row['replies']."</td>
+									<td><a href='".htmlentities($row['topic_link'])."' target='".$myTarget."'>".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))."</a>,
+									<a href='".htmlentities($row['member_link'])."' target='".$myTarget."'><i class=\"fa fa-user\"></i>".$row['username']."</a> <a href='".htmlentities($row['topic_link'])."' target='".$myTarget."'></a>
+									<a href='".htmlentities($row['topic_link'])."' target='".$myTarget."'><i class=\"fa fa-chevron-right\"></i></a>
+									</td>
 								</tr>";
+					
+					$arrOut[$row['topic_title'].", ".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))] = "<a href='".$row['topic_link']."' target='".$myTarget."'>".$row['content']."</a>
+<br /><a href='".$row['member_link']."' target='".$myTarget."'><i class='fa fa-user'></i>".sanitize($row['username'])."</a>, <i class='fa fa-comments'></i>".$row['replies']."
+							";
+				}
+			} else {
+				$myOut .= "<tr valign='top'>
+								<td colspan='3'>".$this->user->lang('latestposts_noentries')."</td>
+							</tr>";
+			}
+			
+				
+			$myOut = "<table class='table fullwidth colorswitch'>
+					<tr>
+						<th width='50%'>".$this->user->lang('latestposts_title')."</th>
+						".(($blnForumName) ? '<th class="nowrap" width="10%">'.$this->user->lang('latestposts_forum').'</th>' : '')."
+						<th width='10%'>".$this->user->lang('latestposts_posts')."</th>
+						<th width='20%'>".$this->user->lang('latestposts_lastpost')."</th>
+					</tr>".$myOut;
+		
+			$myOut .= "</table>";
+			$sucess = true;
+			
+			if($this->config('style') == 'accordion'){
+				$myOut = '<div style="white-space:normal;">'.$this->jquery->accordion('accordion_'.$this->id, $arrOut).'</div>';
+			}
+					
+		} else {
+			$myTitleLength = ($this->config('trimtitle')) ? $this->config('trimtitle') : 40;
+			if(count($arrData)){
+				$myOut = "<table class='table fullwidth colorswitch'>";
+				
+				foreach($arrData as $row){
+					$short_title = cut_text($row['topic_title'], $myTitleLength, true);
+							
+					$myOut .= "<tr valign='top'>
+							<td>
+								<a href='".$row['topic_link']."' target='".$myTarget."' class='coretip' data-coretip='".$row['content']."'>".$short_title."</a> (<i class='fa fa-comments'></i>".$row['replies'].")<br/>
+								".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true)).", <a href='".$row['member_link']."' target='".$myTarget."'><i class='fa fa-user'></i>".sanitize($row['username'])."</a>
+							</td>
+						</tr>";
+					
+					$arrOut[$short_title] = $this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))."<br /><a href='".$row['topic_link']."' target='".$myTarget."'>".$row['content']."</a>
+<br /><a href='".$row['member_link']."' target='".$myTarget."'><i class='fa fa-user'></i>".sanitize($row['username'])."</a>, <i class='fa fa-comments'></i>".$row['replies']."
+							";
 				}
 				
-					
-				$myOut = "<table class='table fullwidth colorswitch'>
-						<tr>
-							<th width='50%'>".$this->user->lang('latestposts_title')."</th>
-							".(($blnForumName) ? '<th class="nowrap" width="10%">'.$this->user->lang('latestposts_forum').'</th>' : '')."
-							<th width='10%'>".$this->user->lang('latestposts_posts')."</th>
-							<th width='20%'>".$this->user->lang('latestposts_lastpost')."</th>
-						</tr>".$myOut;
-			
 				$myOut .= "</table>";
 				$sucess = true;
-				
-				if($this->config('style') == 'accordion'){
-					$myOut = '<div style="white-space:normal;">'.$this->jquery->accordion('accordion_'.$this->id, $arrOut).'</div>';
-				}
-					
 			} else {
-				$myTitleLength = ($this->config('trimtitle')) ? $this->config('trimtitle') : 40;
-				if(count($arrData)){
-					$myOut = "<table class='table fullwidth colorswitch'>";
-					
-					foreach($arrData as $row){
-						$short_title = cut_text($row['topic_title'], $myTitleLength, true);
-								
-						$myOut .= "<tr valign='top'>
-								<td>
-									<a href='".$row['topic_link']."' target='".$myTarget."' class='coretip' data-coretip='".$row['content']."'>".$short_title."</a> (<i class='fa fa-comments'></i>".$row['replies'].")<br/>
-									".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true)).", <a href='".$row['member_link']."' target='".$myTarget."'><i class='fa fa-user'></i>".sanitize($row['username'])."</a>
-								</td>
-							</tr>";
-						
-						$arrOut[$short_title] = $this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))."<br /><a href='".$row['topic_link']."' target='".$myTarget."'>".$row['content']."</a>
-<br /><a href='".$row['member_link']."' target='".$myTarget."'><i class='fa fa-user'></i>".sanitize($row['username'])."</a>, <i class='fa fa-comments'></i>".$row['replies']."
-								";
-					}
-					
-					$myOut .= "</table>";
-					$sucess = true;
-				} else {
-					$myOut = $this->user->lang('latestposts_noentries');	
-				} 
-				
-				if($this->config('style') == 'accordion'){
-					$myOut = '<div style="white-space:normal;">'.$this->jquery->accordion('accordion_'.$this->id, $arrOut).'</div>';
-				}
-				
-				
-			}
+				$myOut = $this->user->lang('latestposts_noentries');	
+			} 
 			
-			//reset prefix
-			if($this->config('dbmode') == 'bridge'){
-				$mydb->resetPrefix();
+			if($this->config('style') == 'accordion'){
+				$myOut = '<div style="white-space:normal;">'.$this->jquery->accordion('accordion_'.$this->id, $arrOut).'</div>';
 			}
-			
-			if (isset($sucess)) {
-				$this->pdc->put('portal.module.latestposts.u'.$this->user->id,$myOut,300,false,true);
-			}
+
 		}
+			
+		//reset prefix
+		if($this->config('dbmode') == 'bridge'){
+			$mydb->resetPrefix();
+		}
+
 		return $myOut;
 	}
 	
