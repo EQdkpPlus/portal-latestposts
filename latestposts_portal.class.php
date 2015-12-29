@@ -370,11 +370,16 @@ class latestposts_portal extends portal_generic {
 				if (isset($sucess)) {
 					$this->pdc->put('portal.module.latestposts.u'.$this->user->id,$arrData,300,false,true);
 				}
+				
 			} else {
 				$myOut = "An error occured. Please check your settings.";
 				return $myOut;
 			}
 			
+			//reset prefix
+			if($this->config('dbmode') == 'bridge'){
+				$mydb->resetPrefix();
+			}
 		} //Now we should have data
 
 		// Wide Content
@@ -454,11 +459,6 @@ class latestposts_portal extends portal_generic {
 				$myOut = '<div style="white-space:normal;">'.$this->jquery->accordion('accordion_'.$this->id, $arrOut).'</div>';
 			}
 
-		}
-			
-		//reset prefix
-		if($this->config('dbmode') == 'bridge'){
-			$mydb->resetPrefix();
 		}
 
 		return $myOut;
