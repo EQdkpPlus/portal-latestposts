@@ -28,7 +28,7 @@ class latestposts_portal extends portal_generic {
 	protected static $path		= 'latestposts';
 	protected static $data		= array(
 		'name'			=> 'Latest Forum Posts',
-		'version'		=> '3.1.0',
+		'version'		=> '3.1.1',
 		'author'		=> 'GodMod',
 		'icon'			=> 'fa-group',
 		'contact'		=> EQDKP_PROJECT_URL,
