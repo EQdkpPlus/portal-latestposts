@@ -400,14 +400,14 @@ class latestposts_portal extends portal_generic {
 					}
 					$myOut .= "</td>
 									<td align='center'>".$row['replies']."</td>
-									<td><a href='".htmlentities($row['topic_link'])."' target='".$myTarget."'>".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))."</a>,
-									<a href='".htmlentities($row['member_link'])."' target='".$myTarget."'><i class=\"fa fa-user\"></i>".$row['username']."</a> <a href='".htmlentities($row['topic_link'])."' target='".$myTarget."'></a>
-									<a href='".htmlentities($row['topic_link'])."' target='".$myTarget."'><i class=\"fa fa-chevron-right\"></i></a>
+									<td><a href='".htmlentities($row['topic_link'])."'".$strTarget.">".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))."</a>,
+									<a href='".htmlentities($row['member_link'])."'".$strTarget."><i class=\"fa fa-user\"></i>".$row['username']."</a> <a href='".htmlentities($row['topic_link'])."'".$strTarget."></a>
+									<a href='".htmlentities($row['topic_link'])."'".$strTarget."><i class=\"fa fa-chevron-right\"></i></a>
 									</td>
 								</tr>";
 					
 					$arrOut[$row['topic_title'].", ".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))] = "<a href='".$row['topic_link']."' target='".$myTarget."'>".$row['content']."</a>
-<br /><a href='".$row['member_link']."' target='".$myTarget."'><i class='fa fa-user'></i>".sanitize($row['username'])."</a>, <i class='fa fa-comments'></i>".$row['replies']."
+<br /><a href='".$row['member_link']."'".$strTarget."><i class='fa fa-user'></i>".sanitize($row['username'])."</a>, <i class='fa fa-comments'></i>".$row['replies']."
 							";
 				}
 			} else {
