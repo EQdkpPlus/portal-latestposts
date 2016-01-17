@@ -439,16 +439,19 @@ class latestposts_portal extends portal_generic {
 				
 				foreach($arrData as $row){
 					$short_title = cut_text($row['topic_title'], $myTitleLength, true);
+					
+					$strTarget = ($myTarget != "") ? " target='".$myTarget."'" : "";
+					$strTooltip = ($row['content'] != "") ?  " class='coretip' data-coretip='".$row['content']."'" : '';
 							
 					$myOut .= "<tr valign='top'>
 							<td>
-								<a href='".$row['topic_link']."' target='".$myTarget."' class='coretip' data-coretip='".$row['content']."'>".$short_title."</a> (<i class='fa fa-comments'></i>".$row['replies'].")<br/>
-								".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true)).", <a href='".$row['member_link']."' target='".$myTarget."'><i class='fa fa-user'></i>".sanitize($row['username'])."</a>
+								<a href='".$row['topic_link']."'".$strTarget.$strTooltip.">".$short_title."</a> (<i class='fa fa-comments'></i>".$row['replies'].")<br/>
+								".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true)).", <a href='".$row['member_link']."'".$strTarget."><i class='fa fa-user'></i>".sanitize($row['username'])."</a>
 							</td>
 						</tr>";
 					
-					$arrOut[$short_title] = $this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))."<br /><a href='".$row['topic_link']."' target='".$myTarget."'>".$row['content']."</a>
-<br /><a href='".$row['member_link']."' target='".$myTarget."'><i class='fa fa-user'></i>".sanitize($row['username'])."</a>, <i class='fa fa-comments'></i>".$row['replies']."
+					$arrOut[$short_title] = $this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))."<br /><a href='".$row['topic_link']."'".$strTarget.">".$row['content']."</a>
+<br /><a href='".$row['member_link']."'".$strTarget."><i class='fa fa-user'></i>".sanitize($row['username'])."</a>, <i class='fa fa-comments'></i>".$row['replies']."
 							";
 				}
 				
