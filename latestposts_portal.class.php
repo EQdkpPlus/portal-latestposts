@@ -3,7 +3,7 @@
  *	Package:	Last posts Portal Module
  *	Link:		http://eqdkp-plus.eu
  *
- *	Copyright (C) 2006-2015 EQdkp-Plus Developer Team
+ *	Copyright (C) 2006-2016 EQdkp-Plus Developer Team
  *
  *	This program is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU Affero General Public License as published
@@ -386,9 +386,12 @@ class latestposts_portal extends portal_generic {
 		if($this->wide_content){
 			if(count($arrData)){
 				foreach($arrData as $row){
+					$strTarget = ($myTarget != "") ? " target='".$myTarget."'" : "";
+					$strTooltip = ($row['content'] != "") ?  " class='coretip' data-coretip='".$row['content']."'" : '';
+					
 					$myOut .= "<tr valign='top'>
 										<td>
-											<a href='".htmlentities($row['topic_link'])."' target='".$myTarget."' class='coretip' data-coretip='".$row['content']."'>".$row['topic_title']."</a>
+											<a href='".htmlentities($row['topic_link'])."'".$strTarget.$strTooltip.">".$row['topic_title']."</a>
 										</td>";
 						
 					if (isset($row['forum_name']) && $row['forum_name'] != "") {
