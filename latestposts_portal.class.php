@@ -28,7 +28,7 @@ class latestposts_portal extends portal_generic {
 	protected static $path		= 'latestposts';
 	protected static $data		= array(
 		'name'			=> 'Latest Forum Posts',
-		'version'		=> '3.1.2',
+		'version'		=> '3.1.3',
 		'author'		=> 'GodMod',
 		'icon'			=> 'fa-group',
 		'contact'		=> EQDKP_PROJECT_URL,
@@ -342,9 +342,10 @@ class latestposts_portal extends portal_generic {
 						$strContent = strip_tags($strContent);
 						$strContent = $this->remove_bbcode($strContent);
 						$strContent = cut_text($strContent, 300, true);
-							
-						$strMemberlinkWrapper = $this->routing->build('external', $row['bb_username'].'-'.$row['bb_user_id'], 'User');
-						$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_post_id'].'-'.$row['bb_topic_id'], 'Topic');
+						
+						$blnAddSID = ($this->user->id > 0) ? true : false;
+						$strMemberlinkWrapper = $this->routing->build('external', $row['bb_username'].'-'.$row['bb_user_id'], 'User', $blnAddSID);
+						$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_post_id'].'-'.$row['bb_topic_id'], 'Topic', $blnAddSID);
 				
 						$member_link	= (in_array($this->config('linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('member', $row) : $strMemberlinkWrapper;
 						$topic_link		= (in_array($this->config('linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('topic', $row) : $strTopiclinkWrapper;
