@@ -42,6 +42,7 @@ $lang = array(
 	"latestposts_dbmode_same" => 'Forum is in the same db as EQDKP',
 	"latestposts_dbmode_new" => 'Forum is in another db as EQDKP',
 	"latestposts_dbmode_bridge" => 'Use connection settings of bridge',
+	"latestposts_dbmode_none" => 'None',
 	"latestposts_f_dbname" => 'Database',
 	"latestposts_f_dbuser" => 'User',
 	"latestposts_f_dbpassword" => 'Password',

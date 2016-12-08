@@ -36,6 +36,7 @@ $lang = array(
 	'latestposts_dbmode_same'			=> 'Forum in selben DB wie das EQDKP',
 	'latestposts_dbmode_new'			=> 'Forum in anderen DB als das EQDKP',
 	'latestposts_dbmode_bridge'			=> 'Verwende die Verbindung der Bridge',
+	'latestposts_dbmode_none'			=> 'Keine',
 	'latestposts_f_dbname'				=> 'Datenbank',
 	'latestposts_f_dbuser'				=> 'Benutzer',
 	'latestposts_f_dbpassword'			=> 'Passwort',
