@@ -27,9 +27,15 @@ class latestpostsmodule_discord {
 	public function getBBPosts($arrPrivateforums, $black_or_white, $topicnumber, $showcontent, $strBoardURL){
 		$arrForums = $this->getBBForums($strBoardURL);
 		$arrData = array();
-
-		list($guildid, $token) = explode(':', $strBoardURL);
-		$token = str_replace("/", "", $token);
+		
+		if(strpos($strBoardURL, ':') !== false){
+			list($guildid, $token) = explode(':', $strBoardURL);
+			$token = str_replace("/", "", $token);
+		} else {
+			$arrDiscordConfig = register('config')->get_config('discord');
+			$guildid = $arrDiscordConfig['guild_id'];
+			$token = $arrDiscordConfig['bot_token'];
+		}
 
 		foreach($arrForums as $forumID => $forumName){
 			if($black_or_white == 'IN'){
@@ -77,8 +83,14 @@ class latestpostsmodule_discord {
 	public function getBBForums($strBoardURL){
 		$arrOut = array();
 
-		list($guildid, $token) = explode(':', $strBoardURL);
-		$token = str_replace("/", "", $token);
+		if(strpos($strBoardURL, ':') !== false){
+			list($guildid, $token) = explode(':', $strBoardURL);
+			$token = str_replace("/", "", $token);
+		} else {
+			$arrDiscordConfig = register('config')->get_config('discord');
+			$guildid = $arrDiscordConfig['guild_id'];
+			$token = $arrDiscordConfig['bot_token'];
+		}
 
 		$result = register('urlfetcher')->fetch('https://discordapp.com/api/guilds/'.$guildid.'/channels', array('Authorization: Bot '.$token));
 		if($result){
