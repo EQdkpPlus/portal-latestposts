@@ -102,5 +102,9 @@ class latestpostsmodule_discord {
 			return 'index.php?thread/'.$row['bb_topic_id'].'/&action=firstNew';
 		}
 	}
+	
+	public function getBBQuery(){
+		
+	}
 }
 ?>
