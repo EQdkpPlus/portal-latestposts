@@ -35,10 +35,12 @@ class latestposts_portal extends portal_generic {
 			'description'	=> 'View the latest Forum posts.',
 			'exchangeMod'	=> array('latestposts'),
 			'reload_on_vis'	=> true,
-			'lang_prefix'	=> 'latestposts_'
+			'lang_prefix'	=> 'latestposts_',
+			'multiple'		=> true,
 	);
 	protected static $positions = array('middle', 'left1', 'left2', 'right', 'bottom');
-
+	protected static $multiple = true;
+	
 	protected $hooks = array(
 			array('wrapper', 'latestposts_wrapper_hook')
 	);
@@ -197,6 +199,7 @@ class latestposts_portal extends portal_generic {
 					}
 				}
 			}
+			
 			//reset prefix
 			if ($this->config('dbmode') == 'bridge') $mydb->resetPrefix();
 		}
@@ -228,7 +231,7 @@ class latestposts_portal extends portal_generic {
 
 
 	public function output() {
-		$arrData = $this->pdc->get('portal.module.latestposts.u'.$this->user->id,false,true);
+		$arrData = $this->pdc->get('portal.module.latestposts.'.$this->id.'.u'.$this->user->id,false,true);
 		$myTarget	= ($this->config('linktype') == '1') ? '_blank' : '';
 
 		if(!$arrData){
@@ -379,7 +382,7 @@ class latestposts_portal extends portal_generic {
 
 					//Cache the data
 					if (isset($sucess)) {
-						$this->pdc->put('portal.module.latestposts.u'.$this->user->id,$arrData,300,false,true);
+						$this->pdc->put('portal.module.latestposts.'.$this->id.'.u'.$this->user->id,$arrData,300,false,true);
 					}
 
 				} else {
