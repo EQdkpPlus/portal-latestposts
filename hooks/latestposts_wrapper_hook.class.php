@@ -63,7 +63,7 @@ if (!class_exists('latestposts_wrapper_hook')){
 					'bb_post_id'	=> $arrPath[1],
 				);
 				
-				$strUrl = $strBoardURL.$module->getBBLink('topic', $row);
+				$strUrl = $module->getBBLink('topic', $row, $strBoardURL);
 				
 				$out = array(
 					'url'		=> $strUrl,
@@ -79,7 +79,7 @@ if (!class_exists('latestposts_wrapper_hook')){
 					'bb_user_id' => $arrPath[0]
 				);
 				
-				$strUrl = $strBoardURL.$module->getBBLink('member', $row);
+				$strUrl = $module->getBBLink('member', $row, $strBoardURL);
 				
 				$out = array(
 					'url'		=> $strUrl,

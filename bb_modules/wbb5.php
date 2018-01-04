@@ -22,7 +22,7 @@
 if ( !defined('EQDKP_INC') ){
 	header('HTTP/1.0 404 Not Found');exit;
 }
-class latestpostsmodule_wbb4 {
+class latestpostsmodule_wbb5 {
 	
 	public function getBBQuery($arrPrivateforums, $black_or_white, $topicnumber) {
 			// Build the db query
@@ -50,9 +50,16 @@ class latestpostsmodule_wbb4 {
 	
 	public function getBBLink($mode, $row, $strBoardURL){
 		if($mode=='member'){
-			return $strBoardURL.'index.php/User/'.$row['bb_user_id'].'-'.$row['bb_username'].'/';
+			$strURL = register('config')->get('cmsbridge_framework_url');
+			if(!$strURL) $strURL = $strBoardURL;
+			
+			if (substr($strURL, -1) != "/"){
+				$strURL .= '/';
+			}
+			
+			return $strURL.'index.php?user/'.$row['bb_user_id'].'-'.$row['bb_username'].'/';
 		}else{
-			return $strBoardURL.'index.php/Thread/'.$row['bb_topic_id'].'/?action=firstNew';
+			return $strBoardURL.'index.php?thread/'.$row['bb_topic_id'].'/&action=firstNew';
 		}
 	}
 }

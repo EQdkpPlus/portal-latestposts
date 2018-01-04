@@ -28,7 +28,7 @@ class latestposts_portal extends portal_generic {
 	protected static $path		= 'latestposts';
 	protected static $data		= array(
 			'name'			=> 'Latest Forum Posts',
-			'version'		=> '3.2.1',
+			'version'		=> '3.3.0',
 			'author'		=> 'GodMod',
 			'icon'			=> 'fa-group',
 			'contact'		=> EQDKP_PROJECT_URL,
@@ -66,6 +66,7 @@ class latestposts_portal extends portal_generic {
 								'wbb3'		=> 'WBB 3',
 								'wbb4'		=> 'WBB 4',
 								'wbb4_1'	=> 'WBB 4.1',
+								'wbb5'		=> 'WBB 5',
 								'e107'		=> 'e107',
 								'mybb'		=> 'MyBB',
 								'discord'	=> 'Discord',
@@ -360,8 +361,8 @@ class latestposts_portal extends portal_generic {
 							$strMemberlinkWrapper = $this->routing->build('external', $row['bb_username'].'-'.$row['bb_user_id'], 'User', $blnAddSID);
 							$strTopiclinkWrapper = $this->routing->build('external', $row['bb_topic_title'].'-'.$row['bb_post_id'].'-'.$row['bb_topic_id'], 'Topic', $blnAddSID);
 							
-							$member_link	= (in_array($this->config('linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('member', $row) : $strMemberlinkWrapper;
-							$topic_link		= (in_array($this->config('linktype'), range(0,1))) ? $strBoardURL.$module->getBBLink('topic', $row) : $strTopiclinkWrapper;
+							$member_link	= (in_array($this->config('linktype'), range(0,1))) ? $module->getBBLink('member', $row, $strBoardURL) : $strMemberlinkWrapper;
+							$topic_link		= (in_array($this->config('linktype'), range(0,1))) ? $module->getBBLink('topic', $row, $strBoardURL) : $strTopiclinkWrapper;
 
 
 							$arrData[] = array(

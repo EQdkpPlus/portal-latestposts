@@ -134,8 +134,8 @@ if (!class_exists('exchange_latestposts')){
 						$sucess = true;
 						while($row = $objQuery->fetchAssoc()){
 							$myOut['posts'][] = array(
-									'member_link' => htmlentities($strBoardURL.$module->getBBLink('member', $row)),
-									'topic_link' => htmlentities($strBoardURL.$module->getBBLink('topic', $row)),
+									'member_link' => htmlentities($module->getBBLink('member', $row, $strBoardURL)),
+									'topic_link' => htmlentities($module->getBBLink('topic', $row, $strBoardURL)),
 									'topic_title' => $row['bb_topic_title'],
 									'topic_replies' => intval($row['bb_replies']),
 									'topic_lastpost_date' => $this->time->date('Y-m-d H:i', $row['bb_posttime']),

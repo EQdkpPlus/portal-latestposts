@@ -39,11 +39,11 @@ class latestpostsmodule_smf {
 		return $myBBquery;
 	}
 	
-	public function getBBLink($mode, $row){
+	public function getBBLink($mode, $row, $strBoardURL){
 		if($mode=='member'){
-			return 'index.php?action=profile;u='.$row['bb_poster_id'];
+			return $strBoardURL.'index.php?action=profile;u='.$row['bb_poster_id'];
 		}else{
-			return 'index.php?topic='.$row['bb_topic_id'].'.msg'.$row['bb_post_id'].';topicseen#new';
+			return $strBoardURL.'index.php?topic='.$row['bb_topic_id'].'.msg'.$row['bb_post_id'].';topicseen#new';
 		}
 	}
 }

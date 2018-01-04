@@ -51,11 +51,11 @@ class latestpostsmodule_phpbb3 {
 	}
 	
 	
-	public function getBBLink($mode, $row){
+	public function getBBLink($mode, $row, $strBoardURL){
 		if($mode=='member'){
-			return 'memberlist.php?mode=viewprofile&u='.$row['bb_user_id'];
+			return $strBoardURL.'memberlist.php?mode=viewprofile&u='.$row['bb_user_id'];
 		}else{
-			return 'viewtopic.php?f='.$row['bb_forum_id'].'&t='.$row['bb_topic_id'].'&p='.$row['bb_post_id'].'#p'.$row['bb_post_id'];
+			return $strBoardURL.'viewtopic.php?f='.$row['bb_forum_id'].'&t='.$row['bb_topic_id'].'&p='.$row['bb_post_id'].'#p'.$row['bb_post_id'];
 		}
 	}
 }

@@ -43,11 +43,11 @@ class latestpostsmodule_ipb3 {
 		return $myBBforumQuery;
 	}
 	
-	public function getBBLink($mode, $row){
+	public function getBBLink($mode, $row, $strBoardURL){
 		if($mode == 'member'){
-			return "index.php?/user/".$row['bb_poster_id']."-".$row['bb_poster_id']."/";
+			return $strBoardURL."index.php?/user/".$row['bb_poster_id']."-".$row['bb_poster_id']."/";
 		} else {
-			return "index.php?/topic/".$row['bb_topic_id']."-".$row['bb_topic_id']."/?view=getlastpost";
+			return $strBoardURL."index.php?/topic/".$row['bb_topic_id']."-".$row['bb_topic_id']."/?view=getlastpost";
 		}
 	}
 }

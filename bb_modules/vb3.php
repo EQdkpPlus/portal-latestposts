@@ -49,11 +49,11 @@ class latestpostsmodule_vb3 {
 	}
 	
 	
-	public function getBBLink($mode, $row){
+	public function getBBLink($mode, $row, $strBoardURL){
 		if($mode=='member'){
-			return 'member.php?u='.$row['bb_user_id'];
+			return $strBoardURL.'member.php?u='.$row['bb_user_id'];
 		}else{
-			return 'showthread.php?p='.$row['bb_post_id'].'#post'.$row['bb_post_id'];
+			return $strBoardURL.'showthread.php?p='.$row['bb_post_id'].'#post'.$row['bb_post_id'];
 		}
 	}
 }

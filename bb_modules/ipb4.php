@@ -52,13 +52,13 @@ class latestpostsmodule_ipb4 {
 		return $myBBquery;
 	}
 	
-	public function getBBLink($mode, $row){
+	public function getBBLink($mode, $row, $strBoardURL){
 		if($mode == 'member'){
 			//http://localhost/sonstige/ipb4/index.php?/profile/1-admin/
-			return "index.php?/profile/".$row['bb_poster_id']."-".$row['bb_username']."/";
+			return $strBoardURL."index.php?/profile/".$row['bb_poster_id']."-".$row['bb_username']."/";
 		} else {
 			//http://localhost/sonstige/ipb4/index.php?/topic/1-welcome/
-			return "index.php?/topic/".$row['bb_topic_id']."-".$row['bb_topic_id']."/?view=getlastpost";
+			return $strBoardURL."index.php?/topic/".$row['bb_topic_id']."-".$row['bb_topic_id']."/?view=getlastpost";
 		}
 	}
 }

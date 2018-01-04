@@ -38,8 +38,8 @@ class latestpostsmodule_ipb2 {
 		return $myBBquery;
 	}
 	
-	public function getBBLink($mode, $row){
-		return 'index.php?'.(($mode=='member') ? 'showuser='.$row['bb_poster_id'] : 'showtopic='.$row['bb_topic_id'].'&view=getlastpost');
+	public function getBBLink($mode, $row, $strBoardURL){
+		return $strBoardURL.'index.php?'.(($mode=='member') ? 'showuser='.$row['bb_poster_id'] : 'showtopic='.$row['bb_topic_id'].'&view=getlastpost');
 	}
 }
 ?>

@@ -43,11 +43,11 @@ class latestpostsmodule_phpbb3 {
 		return $myBBquery;
 	}	
 	
-	public function getBBLink($mode, $row){
+	public function getBBLink($mode, $row, $strBoardURL){
 		if($mode=='member'){
-			return 'profile.php?mode=viewprofile&u='.$row['bb_user_id'];
+			return $strBoardURL.'profile.php?mode=viewprofile&u='.$row['bb_user_id'];
 		}else{
-			return 'viewtopic.php?p='.$row['bb_post_id'].'#'.$row['bb_post_id'];
+			return $strBoardURL.'viewtopic.php?p='.$row['bb_post_id'].'#'.$row['bb_post_id'];
 		}
 	}
 }

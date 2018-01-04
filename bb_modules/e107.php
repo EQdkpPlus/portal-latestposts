@@ -39,8 +39,8 @@ class latestpostsmodule_e107 {
 		return $myBBquery;
 	}
 	
-	public function getBBLink($mode, $row){
-		return 'e107_plugins/forum/forum_viewtopic.php?'.$row['bb_topic_id'];
+	public function getBBLink($mode, $row, $strBoardURL){
+		return $strBoardURL.'e107_plugins/forum/forum_viewtopic.php?'.$row['bb_topic_id'];
 	}
 }
 ?>
