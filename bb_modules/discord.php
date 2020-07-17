@@ -46,20 +46,20 @@ class latestpostsmodule_discord {
 				if(is_array($arrPrivateforums) && !empty($arrPrivateforums) && in_array($forumID, $arrPrivateforums)) continue;
 			}
 
-			$result = register('urlfetcher')->fetch('https://discordapp.com/api/channels/'.$forumID, array('Authorization: Bot '.$token));
+			$result = register('urlfetcher')->fetch('https://discord.com/api/channels/'.$forumID, array('Authorization: Bot '.$token));
 			if($result){
 				$arrJSON = json_decode($result, true);
 					
 				$strLastMessage = $arrJSON['last_message_id'];
 
-				$result = register('urlfetcher')->fetch('https://discordapp.com/api/channels/'.$forumID.'/messages/'.$strLastMessage, array('Authorization: Bot '.$token));
+				$result = register('urlfetcher')->fetch('https://discord.com/api/channels/'.$forumID.'/messages/'.$strLastMessage, array('Authorization: Bot '.$token));
 				if($result){
 					$arrJSON = json_decode($result, true);
 
 					$arrData[] = array(
 							'content' 	=> ($showcontent !== false && $showcontent) ? $arrJSON['content'] : '',
-							'member_link'	=> 'https://discordapp.com/channels/@me/'.$arrJSON['author']['id'],
-							'topic_link'	=> 'https://discordapp.com/channels/'.$guildid.'/'.$forumID,
+							'member_link'	=> 'https://discord.com/channels/@me/'.$arrJSON['author']['id'],
+							'topic_link'	=> 'https://discord.com/channels/'.$guildid.'/'.$forumID,
 							'topic_title'	=> '#'.$forumName,
 							'forum_name'	=> '',
 							'replies'	=> '&infin;',
@@ -69,6 +69,7 @@ class latestpostsmodule_discord {
 							'topic_id'	=> $forumID,
 							'forum_id'	=> 0,
 					);
+					
 				}
 			}
 		}
@@ -92,7 +93,7 @@ class latestpostsmodule_discord {
 			$token = $arrDiscordConfig['bot_token'];
 		}
 
-		$result = register('urlfetcher')->fetch('https://discordapp.com/api/guilds/'.$guildid.'/channels', array('Authorization: Bot '.$token));
+		$result = register('urlfetcher')->fetch('https://discord.com/api/guilds/'.$guildid.'/channels', array('Authorization: Bot '.$token));
 		if($result){
 			$arrJSON = json_decode($result, true);
 				

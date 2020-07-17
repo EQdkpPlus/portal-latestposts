@@ -28,7 +28,7 @@ class latestposts_portal extends portal_generic {
 	protected static $path		= 'latestposts';
 	protected static $data		= array(
 			'name'			=> 'Latest Forum Posts',
-			'version'		=> '3.3.0',
+			'version'		=> '3.3.1',
 			'author'		=> 'GodMod',
 			'icon'			=> 'fa-group',
 			'contact'		=> EQDKP_PROJECT_URL,
@@ -107,6 +107,7 @@ class latestposts_portal extends portal_generic {
 				'dbpassword'	=> array(
 						'type'		=> 'password',
 						'size'		=> '30',
+						'pattern'	=> '',
 						'encrypt'	=> true,
 						'class'		=> 'js_reload',
 						'set_value' => true,
@@ -156,6 +157,8 @@ class latestposts_portal extends portal_generic {
 		if((int)$this->config->get('cmsbridge_active') != 1){
 			unset($settings['dbmode']['options']['bridge']);
 		}
+		
+		$mydb = false;
 
 		//Try a database connection
 		if((int)$this->config->get('cmsbridge_active') == 1 && $this->config('dbmode') == 'bridge'){
@@ -181,7 +184,7 @@ class latestposts_portal extends portal_generic {
 		}
 
 		// get a list of all subforums
-		if ($mydb || $this->config('dbmode') == 'none'){
+		if (($mydb && $mydb !== null && is_object($mydb)) || $this->config('dbmode') == 'none'){
 			$bbModule = $this->root_path . 'portal/latestposts/bb_modules/'.$this->config('bbmodule').'.php';
 			if(is_file($bbModule)){
 				include_once($bbModule);
@@ -203,6 +206,8 @@ class latestposts_portal extends portal_generic {
 			
 			//reset prefix
 			if ($this->config('dbmode') == 'bridge') $mydb->resetPrefix();
+		} else {
+			if($state == 'fetch_new') $this->core->message('Datebase connection failed. Please check your settings.', $this->user->lang('error'), 'error');
 		}
 
 		$visibility = $this->config('visibility');
@@ -419,13 +424,13 @@ class latestposts_portal extends portal_generic {
 					$myOut .= "</td>
 									<td align='center'>".$row['replies']."</td>
 									<td><a href='".htmlentities($row['topic_link'])."'".$strTarget.">".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))."</a>,
-									<a href='".htmlentities($row['member_link'])."'".$strTarget."><i class=\"fa fa-user\"></i>".$row['username']."</a> <a href='".htmlentities($row['topic_link'])."'".$strTarget."></a>
+									<a href='".htmlentities($row['member_link'])."'".$strTarget."><i class=\"fa fa-user\"></i> ".$row['username']."</a> <a href='".htmlentities($row['topic_link'])."'".$strTarget."></a>
 									<a href='".htmlentities($row['topic_link'])."'".$strTarget."><i class=\"fa fa-chevron-right\"></i></a>
 									</td>
 								</tr>";
 						
 					$arrOut[$row['topic_title'].", ".$this->time->createTimeTag($row['posttime'], $this->time->user_date($row['posttime'], true))] = "<a href='".$row['topic_link']."' target='".$myTarget."'>".$row['content']."</a>
-<br /><a href='".$row['member_link']."'".$strTarget."><i class='fa fa-user'></i>".sanitize($row['username'])."</a>, <i class='fa fa-comments'></i>".$row['replies']."
+<br /><a href='".$row['member_link']."'".$strTarget."><i class='fa fa-user'></i> ".sanitize($row['username'])."</a>, <i class='fa fa-comments'></i>".$row['replies']."
 							";
 				}
 			} else {
