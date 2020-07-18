@@ -36,7 +36,7 @@ class latestpostsmodule_wbb5 {
 			if(is_array($arrPrivateforums) && !empty($arrPrivateforums)){
 				$myBBquery .= " AND t.boardID ".$black_or_white."(". implode(', ', $arrPrivateforums).")";
 			}
-			$myBBquery	.= " AND p.time = t.lastPostTime AND b.boardID = t.boardID 
+			$myBBquery	.= " AND p.postID = t.lastPostID AND b.boardID = t.boardID 
 							ORDER BY t.lastPostTime DESC LIMIT ".trim($topicnumber);
 						
 		return $myBBquery;
